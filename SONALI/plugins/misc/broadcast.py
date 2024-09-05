@@ -5,7 +5,7 @@ from pyrogram.enums import ChatMembersFilter
 from pyrogram.errors import FloodWait
 
 from SONALI import app
-from SONALI.misc import SUDOERS
+from config import OWNER_ID
 from SONALI.utils.database import (
     get_active_chats,
     get_authuser_names,
@@ -20,9 +20,13 @@ from config import adminlist
 IS_BROADCASTING = False
 
 
-@app.on_message(filters.command(["broadcast", "gcast"]) & SUDOERS)
+@app.on_message(filters.command("broadcast"))
 @language
 async def braodcast_message(client, message, _):
+    if message.from_user.id != OWNER_ID:
+        return await message.reply_text(
+            "» **sɪʀғ ʏᴇʜ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) ʙʀᴏᴀᴅᴄᴀsᴛ ᴋᴀʀ sᴀᴋᴛᴀ ʜᴀɪ 😏**\n» ᴊᴏɪɴ [ʙᴧʙʏ-ᴍᴜsɪᴄ™](https://t.me/BABY09_WORLD) ғᴏʀ ᴘʀᴏᴍᴏ"
+        )
     global IS_BROADCASTING
     if message.reply_to_message:
         x = message.reply_to_message.id
@@ -124,10 +128,10 @@ async def braodcast_message(client, message, _):
             client = await get_client(num)
             async for dialog in client.get_dialogs():
                 try:
-                    (
-                        await client.forward_messages(dialog.chat.id, y, x)
-                        if message.reply_to_message
-                        else await client.send_message(dialog.chat.id, text=query)
+                    await client.forward_messages(
+                        dialog.chat.id, y, x
+                    ) if message.reply_to_message else await client.send_message(
+                        dialog.chat.id, text=query
                     )
                     sent += 1
                     await asyncio.sleep(3)
