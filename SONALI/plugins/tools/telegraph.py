@@ -12,7 +12,7 @@ def ul(_, message):
         path = reply.download()
         fk = upload_file(path)
         for x in fk:
-            url = "https://telegram.ph" + y
+            url = "https://telegra.ph" + y
 
         i.edit(f'Yᴏᴜʀ ʟɪɴᴋ sᴜᴄᴄᴇssғᴜʟ Gᴇɴ 𝖡ʏ Bᴀʙʏ Mᴜsɪᴄ {url}')
 
