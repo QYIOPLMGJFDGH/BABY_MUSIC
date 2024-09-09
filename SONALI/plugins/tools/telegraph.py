@@ -1,4 +1,4 @@
-/Eval from telegraph import upload_file
+from telegraph import upload_file
 from pyrogram import filters
 from SONALI import app
 from pyrogram.types import InputMediaPhoto
@@ -12,7 +12,7 @@ def ul(_, message):
         path = reply.download()
         fk = upload_file(path)
         for x in fk:
-            url = "https://telegra.ph" + y
+            url = "https://telegram.ph" + y
 
         i.edit(f'Yᴏᴜʀ ʟɪɴᴋ sᴜᴄᴄᴇssғᴜʟ Gᴇɴ 𝖡ʏ Bᴀʙʏ Mᴜsɪᴄ {url}')
 
