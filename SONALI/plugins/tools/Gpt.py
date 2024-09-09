@@ -1,40 +1,38 @@
-import random
-import time
-import requests
+import asyncio
+import aiohttp
+from pyrogram import Client, filters
 from SONALI import app
-from config import BOT_USERNAME
+from pymongo import MongoClient
+from config import MONGO_DB_URI
 
-from pyrogram.enums import ChatAction, ParseMode
-from pyrogram import filters
+DATABASE = MongoClient(MONGO_DB_URI)
+db = DATABASE["MAIN"]["USERS"]
+collection = db["members"]
 
-@app.on_message(filters.command(["chatgpt","ai","ask","gpt","solve"],  prefixes=["+", ".", "/", "-", "", "$","#","&"]))
-async def chat_gpt(bot, message):
-    try:
-        start_time = time.time()
-        await bot.send_chat_action(message.chat.id, ChatAction.TYPING)
+def add_user_database(user_id: int):
+    check_user = collection.find_one({"user_id": user_id})
+    if not check_user:
+        return collection.insert_one({"user_id": user_id})
 
-        if len(message.command) < 2:
-            await message.reply_text(
-                "Example:\n\n/chatgpt Where is TajMahal?"
-            )
-        else:
-            a = message.text.split(' ', 1)[1]
-            response = requests.get(f'https://chatgpt.apinepdev.workers.dev/?question={a}')
-
-            try:
-                # Check if "results" key is present in the JSON response
-                if "answer" in response.json():
-                    x = response.json()["answer"]
-                    end_time = time.time()
-                    telegram_ping = str(round((end_time - start_time) * 1000, 3)) + " ms"
-                    await message.reply_text(
-                        f" {x}      ᴀɴsᴡᴇʀɪɴɢ ʙʏ ➛  @WORLD_ALPHA",
-                        parse_mode=ParseMode.MARKDOWN
-                    )
+async def chat_with_api(model, prompt):
+    url = f"https://tofu-api.onrender.com/chat/{model}/{prompt}"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            if response.status == 200:
+                data = await response.json()
+                if data["code"] == 2:
+                    return data["content"]
                 else:
-                    await message.reply_text("No 'results' key found in the response.")
-            except KeyError:
-                # Handle any other KeyError that might occur
-                await message.reply_text("Error accessing the response.")
-    except Exception as e:
-        await message.reply_text(f"**á´‡Ê€Ê€á´Ê€: {e} ")
+                    return "ᴇʀʀᴏʀ: ᴜɴᴀʙʟᴇ ᴛᴏ ɢᴇᴛ ʀᴇꜱᴘᴏɴꜱᴇ ꜰʀᴏᴍ ᴛʜᴇ ᴀᴘɪ"
+            else:
+                return "ᴇʀʀᴏʀ: ᴜɴᴀʙʟᴇ ᴛᴏ ᴄᴏɴɴᴇᴄᴛ ᴛᴏ ᴛʜᴇ ᴀᴘɪ"
+                
+@app.on_message(filters.command(["chatgpt","ai","ask","gpt","solve"],  prefixes=["/", ".", "!", "?"]))
+async def gptAi(client, message):
+    split_text = message.text.split(None, 1)
+    if len(split_text) < 2:
+        await message.reply_text("❖ ᴜꜱᴀɢᴇ : /ai [ǫᴜᴇʀʏ]")
+    else:
+        response = await chat_with_api("gpt", split_text[1])
+        await message.reply_text(response)
+
