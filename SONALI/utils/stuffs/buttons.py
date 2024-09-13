@@ -11,11 +11,11 @@ class BUTTONS(object):
     [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data=f"settingsback_helper"), 
     ]]
     
-    MBUTTON = [[InlineKeyboardButton1("• ᴀɪ •", callback_data="mplus HELP_ChatGPT"),InlineKeyboardButton1("• ɪɴғᴏ •", callback_data="mplus HELP_Info"),InlineKeyboardButton("• sᴛɪᴄᴋᴇꝛ •", callback_data="mplus HELP_Sticker")],
-    [InlineKeyboardButton1("• ᴇxᴛꝛᴧ •", callback_data="mplus HELP_Extra"),
-    InlineKeyboardButton1("• ɪᴍᴧɢᴇ •", callback_data="mplus HELP_Image"),InlineKeyboardButton1("• sᴇᴧꝛᴄʜ •", callback_data="mplus HELP_Search")],
-    [InlineKeyboardButton1("• ǫᴜɪʟʏ •", callback_data="mplus HELP_Q")],
-    [InlineKeyboardButton1("• ғᴏиᴛ •", callback_data="mplus HELP_Font"),
-    InlineKeyboardButton1("• ɢᴧᴍᴇ •", callback_data="mplus HELP_Game"),InlineKeyboardButton1("• ᴛ-ɢꝛᴧᴘʜ •", callback_data="mplus HELP_TG")],    
-    [InlineKeyboardButton1("• ʙᴀᴄᴋ •", callback_data=f"settingsback_helper"), 
+    MBUTTON = [[InlineKeyboardButton("• ᴀɪ •", callback_data="mplus HELP_ChatGPT"),InlineKeyboardButton("• ɪɴғᴏ •", callback_data="mplus HELP_Info"),InlineKeyboardButton("• sᴛɪᴄᴋᴇꝛ •", callback_data="mplus HELP_Sticker")],
+    [InlineKeyboardButton("• ᴇxᴛꝛᴧ •", callback_data="mplus HELP_Extra"),
+    InlineKeyboardButton("• ɪᴍᴧɢᴇ •", callback_data="mplus HELP_Image"),InlineKeyboardButton("• sᴇᴧꝛᴄʜ •", callback_data="mplus HELP_Search")],
+    [InlineKeyboardButton("• ǫᴜɪʟʏ •", callback_data="mplus HELP_Q")],
+    [InlineKeyboardButton("• ғᴏиᴛ •", callback_data="mplus HELP_Font"),
+    InlineKeyboardButton("• ɢᴧᴍᴇ •", callback_data="mplus HELP_Game"),InlineKeyboardButton("• ᴛ-ɢꝛᴧᴘʜ •", callback_data="mplus HELP_TG")],    
+    [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data=f"settingsback_helper"), 
     ]]
