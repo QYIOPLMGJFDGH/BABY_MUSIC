@@ -31,7 +31,7 @@ async def chat_with_api(model, prompt):
 async def gptAi(client, message):
     split_text = message.text.split(None, 1)
     if len(split_text) < 2:
-        await message.reply_text("❖ ᴜꜱᴀɢᴇ : /ai [ǫᴜᴇʀʏ]")
+        await message.reply_text("❍ ᴜꜱᴀɢᴇ : /ai • ǫᴜᴇʀʏ •")
     else:
         response = await chat_with_api("gpt", split_text[1])
         await message.reply_text(response)
