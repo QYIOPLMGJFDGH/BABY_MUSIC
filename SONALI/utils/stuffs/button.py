@@ -1,6 +1,6 @@
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton1, Message
 from pyrogram import Client, filters, enums 
-class BUTTON(object):
+class BUTTONS(object):
     MBUTTON = [[InlineKeyboardButton1("• ᴀɪ •", callback_data="mplus HELP_ChatGPT"),InlineKeyboardButton1("• ɪɴғᴏ •", callback_data="mplus HELP_Info"),InlineKeyboardButton("• sᴛɪᴄᴋᴇꝛ •", callback_data="mplus HELP_Sticker")],
     [InlineKeyboardButton1("• ᴇxᴛꝛᴧ •", callback_data="mplus HELP_Extra"),
     InlineKeyboardButton1("• ɪᴍᴧɢᴇ •", callback_data="mplus HELP_Image"),InlineKeyboardButton1("• sᴇᴧꝛᴄʜ •", callback_data="mplus HELP_Search")],
