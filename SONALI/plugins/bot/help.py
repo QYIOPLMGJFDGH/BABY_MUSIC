@@ -102,6 +102,10 @@ async def on_back_button(client, CallbackQuery):
             _["help_1"].format(SUPPORT_CHAT), reply_markup=keyboard
         )
 
+@app.on_callback_query(filters.regex("bbot_cb") & ~BANNED_USERS)
+async def helper_cb(client, CallbackQuery):
+    await CallbackQuery.edit_message_text(Helper.HELP_B, reply_markup=InlineKeyboardMarkup(BUTTONS.BBUTTON))
+
 @app.on_callback_query(filters.regex('mplus'))      
 async def mb_plugin_button(client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
