@@ -13,7 +13,7 @@ async def google_img_search(client: Client, message: Message):
     try:
         query = message.text.split(None, 1)[1]
     except IndexError:
-        return await message.reply("Provide an image query to search!")
+        return await message.reply("❍ ᴘʀᴏᴠɪᴅᴇ ᴀɴ ɪᴍᴀɢᴇ ǫᴜɪᴇʀʏ ᴛᴏ sᴇᴀʀᴄʜ!")
 
     lim = findall(r"lim=\d+", query)
     try:
@@ -31,14 +31,14 @@ async def google_img_search(client: Client, message: Message):
             raise Exception("No images were downloaded.")
         lst = [os.path.join(images_dir, img) for img in os.listdir(images_dir)][:lim]  # Ensure we only take the number of images specified by lim
     except Exception as e:
-        return await message.reply(f"Error in downloading images: {e}")
+        return await message.reply(f"❍ ᴇʀʀᴏʀ ɪɴ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ɪᴍᴀɢᴇs: {e}")
 
-    msg = await message.reply("Sapna Scrapping images...")
+    msg = await message.reply("❍ ʙᴀʙʏ ғɪɴᴅɪɴɢ ɪᴍᴀɢᴇs.....")
 
     count = 0
     for img in lst:
         count += 1
-        await msg.edit(f"baby owo scrapped images {count}")
+        await msg.edit(f"❍ ʙᴀʙʏ ғɪɴᴅ {count} ɪᴍᴀɢᴇs.....")
 
     try:
         await app.send_media_group(
@@ -50,4 +50,4 @@ async def google_img_search(client: Client, message: Message):
         await msg.delete()
     except Exception as e:
         await msg.delete()
-        return await message.reply(f"Error in sending images: {e}")
+        return await message.reply(f"❍ ᴇʀʀᴏʀ ɪɴ sᴇɴᴅɪɴɢ ɪᴍᴀɢᴇs: {e}")
