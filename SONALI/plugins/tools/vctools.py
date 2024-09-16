@@ -19,13 +19,13 @@ from telethon.tl.functions.phone import (
 # vc on
 @app.on_message(filters.video_chat_started)
 async def brah(_, msg):
-    await msg.reply("**ᴠᴄ sᴛᴀʀᴛᴇᴅ ᴀʙ sᴏɴɢ ʙᴀᴊᴀᴏ**")
+    await msg.reply("**⌯ ◉ 𝗩𝗖 𝗦𝗧𝗔𝗥𝗧𝗘𝗗 ◉ ⌯**")
 
 
 # vc off
 @app.on_message(filters.video_chat_ended)
 async def brah2(_, msg):
-    await msg.reply("**ᴠᴄ ᴇɴᴅ ᴏᴋ ʙʏᴇ**")
+    await msg.reply("**⌯ ◉ 𝗩𝗖 𝗘𝗡𝗗𝗘𝗗 ◉ ⌯**")
 
 
 # invite members on vc
