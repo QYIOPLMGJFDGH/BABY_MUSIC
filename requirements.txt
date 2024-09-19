@@ -36,4 +36,4 @@ yt-dlp
 git+https://github.com/alexmercerind/youtube-search-python@main
 git+https://github.com/joetats/youtube_search@master
 bing_image_downloader
-git+https://github.com/BABY-MUSIC/teambabyAPI
+git+https://github.com/BABY-MUSIC/Fast_GPTai
