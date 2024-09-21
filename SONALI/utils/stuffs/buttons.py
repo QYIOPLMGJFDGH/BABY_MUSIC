@@ -20,6 +20,6 @@ class BUTTONS(object):
     [InlineKeyboardButton("↺ ʙᴀᴄᴋ ↻", callback_data=f"modebot_cb"), 
     ]]
 
-    UBUTTON = [[InlineKeyboardButton("• ᴍᴜsɪᴄ •", callback_data="settings_back_helper"),InlineKeyboardButton("• ᴛᴏᴏʟs •", callback_data=f"mbot_cb")],[InlineKeyboardButton("• ᴍᴀɴᴀɢᴇ •", callback_data=f"bbot_cb"),
-    InlineKeyboardButton("• ʀᴀɪᴅ •", callback_data="cplus HELP_raid")],[InlineKeyboardButton("↺ ʙᴀᴄᴋ ↻", callback_data=f"settingsback_helper"),
+    UBUTTON = [[InlineKeyboardButton("˹ ᴍᴜsɪᴄ ˼", callback_data="settings_back_helper"),InlineKeyboardButton("˹ ᴛᴏᴏʟs ˼", callback_data=f"mbot_cb")],[InlineKeyboardButton("˹ ᴍᴀɴᴀɢᴇ ˼", callback_data=f"bbot_cb"),
+    InlineKeyboardButton("˹ ʀᴀɪᴅ ˼", callback_data="cplus HELP_raid")],[InlineKeyboardButton("↺ ʙᴀᴄᴋ ↻", callback_data=f"settingsback_helper"),
     ]]
