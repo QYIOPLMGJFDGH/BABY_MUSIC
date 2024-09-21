@@ -24,5 +24,5 @@ class BUTTONS(object):
     InlineKeyboardButton("˹ ʀᴀɪᴅ ˼", callback_data="cplus HELP_raid")],[InlineKeyboardButton("↺ ʙᴀᴄᴋ ↻", callback_data=f"settingsback_helper"),
     ]]
 
-    ABUTTON = [[InlineKeyboardButton("˹ ᴜᴘᴅᴀᴛᴇ ˼", url=config.SUPPORT_CHANNEL"), InlineKeyboardButton("˹ sᴜᴘᴘᴏʀᴛ ˼", url=config.SUPPORT_CHAT")],[InlineKeyboardButton("˹ ᴀʟʟ ʙᴏᴛ ˼", url=config.SUPPORT_BOT")],[InlineKeyboardButton("↺ ʙᴀᴄᴋ ↻", callback_data=f"settingsback_helper"),
+    ABUTTON = [[InlineKeyboardButton("˹ ᴜᴘᴅᴀᴛᴇ ˼", url=config.SUPPORT_CHANNEL"),InlineKeyboardButton("˹ sᴜᴘᴘᴏʀᴛ ˼", url=config.SUPPORT_CHAT")],[InlineKeyboardButton("˹ ᴀʟʟ ʙᴏᴛ ˼", url=config.SUPPORT_BOT")],[InlineKeyboardButton("↺ ʙᴀᴄᴋ ↻", callback_data=f"settingsback_helper"),
     ]]
