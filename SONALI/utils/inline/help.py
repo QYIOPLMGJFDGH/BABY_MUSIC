@@ -10,7 +10,7 @@ def help_pannel(_, START: Union[bool, int] = None):
     second = [
         InlineKeyboardButton(
             text="↺ ʙᴀᴄᴋ ↻",
-            callback_data=f"settings_back_helper",
+            callback_data=f"modebot_cb",
         ),
        
     ]
