@@ -90,6 +90,35 @@ class Helper(object):
 ❍ /stack ➠ sᴇᴀʀᴄʜᴇs ғᴏʀ ᴘʀᴏɢʀᴀᴍᴍɪɴɢ-ʀᴇʟᴀᴛᴇᴅ ɪɴғᴏʀᴍᴀᴛɪᴏɴ ᴏɴ sᴛᴀᴄᴋ ᴏᴠᴇʀғʟᴏᴡ.
 '''
 
+    HELP_raid = '''raid
+    
+    𝗥𝗮𝗶𝗱: ᴀᴄᴛɪᴠᴀᴛᴇꜱ ʀᴀɪᴅ ᴏɴ ᴀɴʏ ɪɴᴅɪᴠɪᴅᴜᴀʟ ᴜꜱᴇʀ ꜰᴏʀ ɢɪᴠᴇɴ ʀᴀɴɢᴇ.
+  1) .raid <count> <username>
+  2) .raid <count> <reply to user>
+
+𝗥𝗲𝗽𝗹𝘆𝗥𝗮𝗶𝗱: ᴀᴄᴛɪᴠᴀᴛᴇꜱ ʀᴇᴘʟʏ ʀᴀɪᴅ ᴏɴ ᴛʜᴇ ᴜꜱᴇʀ.
+  1) .rraid <replying to user>
+  2) .rraid <username>
+
+𝗗𝗥𝗲𝗽𝗹𝘆𝗥𝗮𝗶𝗱: ᴅᴇᴀᴄᴛɪᴠᴀᴛᴇꜱ ʀᴇᴘʟʏ ʀᴀɪᴅ ᴏɴ ᴛʜᴇ ᴜꜱᴇʀ.
+  1) .drraid <replying to user>
+  2) .drraid <username>
+
+𝐌𝐑𝐚𝐢𝐝: ʟᴏᴠᴇ ʀᴀɪᴅ ᴏɴ ᴛʜᴇ ᴜꜱᴇʀ.
+  1) .mraid <count> <username>
+  2) .mraid <count> <reply to user>
+
+𝐒𝐑𝐚𝐢𝐝: ꜱʜᴀʏᴀʀɪ ʀᴀɪᴅ ᴏɴ ᴛʜᴇ ᴜꜱᴇʀ.
+  1) .sraid <count> <username>
+  2) .sraid <count> <reply to user>
+
+𝐂𝐑𝐚𝐢𝐝: ᴀʙᴄᴅ ʀᴀɪᴅ ᴏɴ ᴛʜᴇ ᴜꜱᴇʀ.
+  1) .craid <count> <username>
+  2) .craid <count> <reply to user>
+
+
+© @UTTAM470'''
+    
     HELP_Image = '''Iᴍᴀɢᴇ
 
 Iᴍᴀɢᴇ ᴄᴏᴍᴍᴀɴᴅꜱ:
