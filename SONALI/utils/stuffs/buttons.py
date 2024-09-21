@@ -19,3 +19,7 @@ class BUTTONS(object):
     InlineKeyboardButton("• ɢᴧᴍᴇ •", callback_data="mplus HELP_Game"),InlineKeyboardButton("• ᴛ-ɢꝛᴧᴘʜ •", callback_data="mplus HELP_TG")],    
     [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data=f"settingsback_helper"), 
     ]]
+
+    UBUTTON = [[InlineKeyboardButton("• ᴍᴜsɪᴄ •", callback_data="mplus HELP_ChatGPT"),InlineKeyboardButton("• ᴛᴏᴏʟs •", callback_data="mplus HELP_Info")],[InlineKeyboardButton("• ᴍᴀɴᴀɢᴇ •", callback_data="mplus HELP_Sticker"),
+    InlineKeyboardButton("• ʀᴀɪᴅ •", callback_data="mplus HELP_Extra"),
+    ]]
