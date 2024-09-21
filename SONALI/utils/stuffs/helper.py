@@ -117,7 +117,7 @@ class Helper(object):
   2) .craid <count> <reply to user>
 
 
-© @UTTAM470'''
+❍ ғᴜᴄᴋᴇᴅ ʙʏ➛[ᴜᴛᴛᴀᴍ ✦](https://t.me/UTTAM470)'''
     
     HELP_Image = '''Iᴍᴀɢᴇ
 
