@@ -23,3 +23,6 @@ class BUTTONS(object):
     UBUTTON = [[InlineKeyboardButton("˹ ᴍᴜsɪᴄ ˼", callback_data="settings_back_helper"),InlineKeyboardButton("˹ ᴛᴏᴏʟs ˼", callback_data=f"mbot_cb")],[InlineKeyboardButton("˹ ᴍᴀɴᴀɢᴇ ˼", callback_data=f"bbot_cb"),
     InlineKeyboardButton("˹ ʀᴀɪᴅ ˼", callback_data="cplus HELP_raid")],[InlineKeyboardButton("↺ ʙᴀᴄᴋ ↻", callback_data=f"settingsback_helper"),
     ]]
+
+    ABUTTON = [[InlineKeyboardButton("˹ ᴜᴘᴅᴀᴛᴇ ˼", url=config.SUPPORT_CHANNEL"),InlineKeyboardButton("˹ sᴜᴘᴘᴏʀᴛ ˼", url=config.SUPPORT_CHAT")],[InlineKeyboardButton("˹ ᴀʟʟ ʙᴏᴛ ˼", url=config.SUPPORT_BOT")],[InlineKeyboardButton("↺ ʙᴀᴄᴋ ↻", callback_data=f"settingsback_helper"),
+    ]]
