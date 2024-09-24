@@ -37,7 +37,7 @@ XCB = [
 def dbb():
     global db
     db = {}
-    LOGGER(name).info(f"𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........")
+    LOGGER().info(f"𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗟𝗢𝗔𝗗 𝗕𝗔𝗕𝗬🍫........")
 
 
 async def sudo():
