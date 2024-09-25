@@ -3,7 +3,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineQueryResultPhoto,
 )
-from youtubesearchpython.future import VideosSearch
+from youtubesearchpython.__future__ import VideosSearch
 from PIL import Image, ImageDraw, ImageFilter
 import requests
 from io import BytesIO
