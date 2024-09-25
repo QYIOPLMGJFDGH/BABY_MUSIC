@@ -113,7 +113,7 @@ async def get_thumb(videoid):
 
 
     circle_thumbnail = crop_center_circle(youtube, 400, 20)
-    circle_thumbnail = circle_thumbnail.resize((400, 400))
+    circle_thumbnail = circle_thumbnail.resize((380, 380))
     circle_position = (120, 160)
     background.paste(circle_thumbnail, circle_position, circle_thumbnail)
 
@@ -139,13 +139,13 @@ async def get_thumb(videoid):
     
     start_point_white = (text_x_position + red_length, 380)
     end_point_white = (text_x_position + line_length, 380)
-    draw.line([start_point_white, end_point_white], fill="white", width=8)
+    draw.line([start_point_white, end_point_white], fill="green", width=8)
 
     
     circle_radius = 10 
     circle_position = (end_point_red[0], end_point_red[1])
     draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
-                  circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill="red")
+                  circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill="green")
     draw.text((text_x_position, 400), "00:00", (255, 255, 255), font=arial)
     draw.text((1080, 400), duration, (255, 255, 255), font=arial)
 
