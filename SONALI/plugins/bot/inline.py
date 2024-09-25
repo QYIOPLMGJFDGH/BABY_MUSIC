@@ -12,33 +12,46 @@ from SONALI.utils.inlinequery import answer
 from config import BANNED_USERS
 
 # Image processing function
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
+import requests
+from io import BytesIO
+
+# Image processing function
 def process_thumbnail(url):
-    response = requests.get(url)
-    
-    if response.status_code != 200:
-        return None  # Handle the case where the image cannot be retrieved
+    try:
+        response = requests.get(url)
+        if response.status_code != 200:
+            return None  # Handle the case where the image cannot be retrieved
 
-    img = Image.open(BytesIO(response.content)).convert("RGBA")
+        img = Image.open(BytesIO(response.content)).convert("RGBA")
 
-    # Create a circular mask
-    mask = Image.new("L", img.size, 0)
-    draw = ImageDraw.Draw(mask)
-    draw.ellipse((0, 0, img.size[0], img.size[1]), fill=255)
+        # Resize the image to a smaller square size, keeping its aspect ratio
+        img.thumbnail((500, 500))
 
-    result = Image.new("RGBA", img.size)
-    result.paste(img, (0, 0), mask=mask)
+        # Create a circular mask
+        mask = Image.new("L", img.size, 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0, img.size[0], img.size[1]), fill=255)
 
-    # Blur the background
-    blurred_bg = img.filter(ImageFilter.GaussianBlur(15))
+        # Apply the circular mask to the image
+        img_with_circle = ImageOps.fit(img, mask.size, centering=(0.5, 0.5))
+        img_with_circle.putalpha(mask)
 
-    # Combine blurred background with circular image
-    final_img = Image.alpha_composite(blurred_bg, result)
+        # Create a blurred background from the original image
+        blurred_bg = img.filter(ImageFilter.GaussianBlur(15))
 
-    # Save the processed image
-    final_img_path = "processed_thumbnail.png"
-    final_img.save(final_img_path)
+        # Composite the circular image onto the blurred background
+        final_img = Image.alpha_composite(blurred_bg, img_with_circle)
 
-    return final_img_path
+        # Save the processed image
+        final_img_path = "processed_thumbnail.png"
+        final_img.save(final_img_path)
+
+        return final_img_path
+
+    except Exception as e:
+        print(f"Error processing the image: {e}")
+        return None
 
 @app.on_inline_query(~BANNED_USERS)
 async def inline_query_handler(client, query):
