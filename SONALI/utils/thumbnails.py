@@ -1,18 +1,17 @@
 
 from youtubesearchpython import VideosSearch
-
-
 from PIL import Image, ImageDraw, ImageFilter
 import requests
 from io import BytesIO
 
-async def get_thumb(videoid):
+def get_thumb(videoid):
     try:
-        query = f"https://www.youtube.com/watch?v={videoid}"
-        results = VideosSearch(query, limit=1)
-        for result in (await results.next())["result"]:
+        # Search for video using video ID only
+        results = VideosSearch(videoid, limit=1).result()
+
+        for result in results["result"]:
             thumbnail_url = result["thumbnails"][0]["url"].split("?")[0]
-            
+
             # Fetch the image
             response = requests.get(thumbnail_url)
             img = Image.open(BytesIO(response.content))
@@ -35,7 +34,13 @@ async def get_thumb(videoid):
             
             return thumbnail_url  # Or save the modified image as needed
     except Exception as e:
+        print(f"Error: {e}")
         return None
+
+# Call the function (not async)
+thumb_url = get_thumb('your_video_id_here')
+print(thumb_url)
+
 
 
 
