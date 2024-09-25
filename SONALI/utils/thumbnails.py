@@ -1,5 +1,5 @@
 from config import YOUTUBE_IMG_URL
-from youtubesearchpython.__future__ import VideosSearch
+from youtubesearchpython.future import VideosSearch
 
 
 async def get_thumb(videoid):
