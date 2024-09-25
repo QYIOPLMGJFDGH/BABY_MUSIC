@@ -4,7 +4,7 @@ from pyrogram.errors import ChannelInvalid
 from pyrogram.enums import ChatType, ChatMembersFilter
 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
-from youtubesearchpython.future import VideosSearch
+from youtubesearchpython.__future__ import VideosSearch
 
 import config
 from SONALI import app
