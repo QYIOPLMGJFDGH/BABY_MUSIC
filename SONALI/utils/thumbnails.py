@@ -1,4 +1,4 @@
-from config import YOUTUBE_IMG_URL
+
 from youtubesearchpython import VideosSearch
 
 
@@ -35,7 +35,7 @@ async def get_thumb(videoid):
             
             return thumbnail_url  # Or save the modified image as needed
     except Exception as e:
-        return YOUTUBE_IMG_URL
+        return None
 
 
 
@@ -47,4 +47,4 @@ async def get_qthumb(vidid):
             thumbnail = result["thumbnails"][0]["url"].split("?")[0]
         return thumbnail
     except Exception as e:
-        return YOUTUBE_IMG_URLE_IMG_URL
+        return None
