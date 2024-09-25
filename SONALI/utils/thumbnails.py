@@ -46,7 +46,7 @@ def crop_center_circle(img, output_size, border, crop_scale=1.5):
     img = img.resize((output_size - 2*border, output_size - 2*border))
     
     
-    final_img = Image.new("RGBA", (output_size, output_size), "white")
+    final_img = Image.new("RGBA", (output_size, output_size), "pink")
     
     
     mask_main = Image.new("L", (output_size - 2*border, output_size - 2*border), 0)
@@ -134,7 +134,7 @@ async def get_thumb(videoid):
     
     start_point_red = (text_x_position, 380)
     end_point_red = (text_x_position + red_length, 380)
-    draw.line([start_point_red, end_point_red], fill="green", width=9)
+    draw.line([start_point_red, end_point_red], fill="pink", width=9)
 
     
     start_point_white = (text_x_position + red_length, 380)
@@ -145,7 +145,7 @@ async def get_thumb(videoid):
     circle_radius = 10 
     circle_position = (end_point_red[0], end_point_red[1])
     draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
-                  circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill="green")
+                  circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill="pink")
     draw.text((text_x_position, 400), "00:00", (255, 255, 255), font=arial)
     draw.text((1080, 400), duration, (255, 255, 255), font=arial)
 
