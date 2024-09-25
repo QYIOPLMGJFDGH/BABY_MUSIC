@@ -150,7 +150,7 @@ async def get_thumb(videoid):
     draw.text((1080, 400), duration, (255, 255, 255), font=arial)
 
     play_icons = Image.open("SONALI/assets/assets/Photoroom-20240925_150217.png")
-    play_icons = play_icons.resize((580, 100))
+    play_icons = play_icons.resize((620, 150))
     background.paste(play_icons, (text_x_position, 455), play_icons)
 
     try:
