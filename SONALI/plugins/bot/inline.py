@@ -4,17 +4,12 @@ from pyrogram.types import (
     InlineQueryResultPhoto,
 )
 from youtubesearchpython import VideosSearch
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
 import requests
 from io import BytesIO
 from SONALI import app
 from SONALI.utils.inlinequery import answer
 from config import BANNED_USERS
-
-# Image processing function
-from PIL import Image, ImageDraw, ImageFilter, ImageOps
-import requests
-from io import BytesIO
 
 # Image processing function
 def process_thumbnail(url):
