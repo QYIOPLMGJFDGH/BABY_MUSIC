@@ -1,55 +1,47 @@
-
-from youtubesearchpython import VideosSearch
-from PIL import Image, ImageDraw, ImageFilter
+from config import YOUTUBE_IMG_URL
+from youtubesearchpython.__future__ import VideosSearch
+from PIL import Image, ImageFilter
 import requests
 from io import BytesIO
 
-def get_thumb(videoid):
+async def get_thumb(videoid):
     try:
-        # Search for video using video ID only
-        results = VideosSearch(videoid, limit=1).result()
-
-        for result in results["result"]:
+        query = f"https://www.youtube.com/watch?v={videoid}"
+        results = VideosSearch(query, limit=1)
+        for result in (await results.next())["result"]:
             thumbnail_url = result["thumbnails"][0]["url"].split("?")[0]
 
-            # Fetch the image
-            response = requests.get(thumbnail_url)
-            img = Image.open(BytesIO(response.content))
+        # Fetch the thumbnail image
+        response = requests.get(thumbnail_url)
+        img = Image.open(BytesIO(response.content))
 
-            # Create circular crop
-            np_img = img.convert("RGB")
-            np_img = np_img.resize((200, 200))  # Resize as needed
-            mask = Image.new('L', np_img.size, 0)
-            draw = ImageDraw.Draw(mask)
-            draw.ellipse((0, 0) + np_img.size, fill=255)
+        # Apply a blur effect to the image
+        blurred_img = img.filter(ImageFilter.GaussianBlur(10))  # You can adjust the radius
 
-            thumb_with_circle = Image.new("RGB", np_img.size)
-            thumb_with_circle.paste(np_img, mask=mask)
+        # Save or return the blurred image
+        blurred_img.show()  # This will display the image
+        return blurred_img  # You can save or return it as needed
 
-            # Apply background blur
-            blurred_img = img.filter(ImageFilter.GaussianBlur(10))
-
-            # Save or return the modified image
-            thumb_with_circle.show()  # This displays the image
-            
-            return thumbnail_url  # Or save the modified image as needed
     except Exception as e:
-        print(f"Error: {e}")
-        return None
-
-# Call the function (not async)
-thumb_url = get_thumb('your_video_id_here')
-print(thumb_url)
-
-
-
+        return YOUTUBE_IMG_URL
 
 async def get_qthumb(vidid):
     try:
         query = f"https://www.youtube.com/watch?v={vidid}"
         results = VideosSearch(query, limit=1)
         for result in (await results.next())["result"]:
-            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-        return thumbnail
+            thumbnail_url = result["thumbnails"][0]["url"].split("?")[0]
+
+        # Fetch the thumbnail image
+        response = requests.get(thumbnail_url)
+        img = Image.open(BytesIO(response.content))
+
+        # Apply a blur effect to the image
+        blurred_img = img.filter(ImageFilter.GaussianBlur(10))  # Adjust the radius as needed
+
+        # Save or return the blurred image
+        blurred_img.show()  # Display the image
+        return blurred_img  # You can save or return it as needed
+
     except Exception as e:
-        return None
+        return YOUTUBE_IMG_URL
