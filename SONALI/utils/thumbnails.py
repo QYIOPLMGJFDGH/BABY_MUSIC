@@ -39,12 +39,11 @@ from PIL import Image, ImageDraw
 
 from PIL import Image, ImageDraw
 
-def crop_center_triangle_3d(img, thumbnail_img, output_size, border, crop_scale=1.5):
-    # Step 1: Crop and resize the input image (thumbnail image)
+def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
     half_the_height = img.size[1] / 2
     larger_size = int(output_size * crop_scale)
-
+    
     # Crop the image
     img = img.crop(
         (
@@ -54,44 +53,41 @@ def crop_center_triangle_3d(img, thumbnail_img, output_size, border, crop_scale=
             half_the_height + larger_size / 2
         )
     )
-
-    # Resize the cropped image to fit inside the triangle
+    
+    # Resize the image to fit inside the final image size
     img = img.resize((output_size - 2 * border, output_size - 2 * border))
-
-    # Step 2: Prepare the final image and thumbnail
-    final_img = Image.new("RGBA", (output_size, output_size), (0, 0, 0, 0))  # Transparent background
-
-    # Resize thumbnail to fit inside the triangle
-    thumbnail_img = thumbnail_img.resize((output_size - 2 * border, output_size - 2 * border))
-
-    # Step 3: Create a mask for the triangle shape
+    
+    # Create a transparent final image
+    final_img = Image.new("RGBA", (output_size, output_size), (0, 0, 0, 0))
+    
+    # Create a mask for the triangle
     mask_main = Image.new("L", (output_size - 2 * border, output_size - 2 * border), 0)
     draw_main = ImageDraw.Draw(mask_main)
-
-    # Coordinates for the main triangle (centered)
+    
+    # Coordinates for the main triangle (centered in the image)
     triangle_points = [
         ((output_size - 2 * border) // 2, 0),  # Top center
-        (0, output_size - 2 * border),          # Bottom left
+        (0, output_size - 2 * border),  # Bottom left
         (output_size - 2 * border, output_size - 2 * border)  # Bottom right
     ]
     draw_main.polygon(triangle_points, fill=255)
 
-    # Step 4: Draw the black border triangle
-    draw_border = ImageDraw.Draw(final_img)
+    # Draw the red border triangle
     border_points = [
-        (border, 0),  # Top center
-        (0, output_size - border),  # Bottom left
-        (output_size - border, output_size - border)  # Bottom right
+        (((output_size - 2 * border) // 2, -border),  # Top center offset by border
+         (-border, output_size - 2 * border + border),  # Bottom left offset
+         (output_size - 2 * border + border, output_size - 2 * border + border))  # Bottom right offset
     ]
-    draw_border.polygon(border_points, fill='black')
+    draw_border = ImageDraw.Draw(final_img)
+    draw_border.polygon(border_points[0], fill=(100, 100, 100)
 
-    # Step 5: Paste the thumbnail into the triangle area using the mask
-    final_img.paste(thumbnail_img, (border, border), mask_main)
-
+    # Combine the triangle mask without any scratch effects
+    mask_combined = mask_main
+    
+    # Paste the cropped image into the triangle mask
+    final_img.paste(img, (border, border), mask_combined)
+    
     return final_img
-
-
-
 
 
 from PIL import ImageDraw, ImageFont, ImageEnhance, ImageFilter
@@ -155,7 +151,7 @@ async def get_thumb(videoid):
     draw.rectangle([0, 0, background.width, background.height], outline=border_color, width=border_width)
 
     # Continue with the rest of your processing
-    circle_thumbnail = crop_center_triangle_3d(youtube, 400, 20)
+    circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
     circle_position = (120, 160)
     background.paste(circle_thumbnail, circle_position, circle_thumbnail)
