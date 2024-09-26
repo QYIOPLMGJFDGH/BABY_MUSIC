@@ -140,8 +140,8 @@ async def get_thumb(videoid):
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
     # Add green border
-    border_width = 10  # Set the width of the border
-    border_color = (0, 255, 0)  # Green color
+    border_width = 20  # Set the width of the border
+    border_color = (255, 0, 0)  # Green color
 
     # Draw border
     draw.rectangle([0, 0, background.width, background.height], outline=border_color, width=border_width)
