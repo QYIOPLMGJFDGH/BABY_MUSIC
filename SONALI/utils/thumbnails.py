@@ -32,7 +32,7 @@ def truncate(text):
 
 from PIL import Image, ImageDraw
 
-def crop_center_triangle(img, output_size, border, crop_scale=1.5):
+def crop_center_circle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
     half_the_height = img.size[1] / 2
     larger_size = int(output_size * crop_scale)
