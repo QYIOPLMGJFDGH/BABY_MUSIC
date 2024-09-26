@@ -175,7 +175,7 @@ async def get_thumb(videoid):
     background.paste(play_icons, (text_x_position, 455), play_icons)
 
     # Add a black border around the thumbnail
-    bordered_background = ImageOps.expand(background, border=10, fill='black')
+    bordered_background = ImageOps.expand(background, border=20, fill='black')
 
     try:
         os.remove(f"cache/thumb{videoid}.png")
