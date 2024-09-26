@@ -106,9 +106,9 @@ async def get_thumb(videoid):
     enhancer = ImageEnhance.Brightness(background)
     background = enhancer.enhance(0.6)
     draw = ImageDraw.Draw(background)
-    arial = ImageFont.truetype("BABYMUSIC/assets/assets/font2.ttf", 30)
-    font = ImageFont.truetype("BABYMUSIC/assets/assets/font.ttf", 30)
-    title_font = ImageFont.truetype("BABYMUSIC/assets/assets/font3.ttf", 45)
+    arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
+    font = ImageFont.truetype("SONALI/assets/assets/font.ttf", 30)
+    title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
 
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
