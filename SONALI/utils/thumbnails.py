@@ -32,6 +32,8 @@ def truncate(text):
 
 from PIL import Image, ImageDraw
 
+from PIL import Image, ImageDraw
+
 def crop_center_circle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
     half_the_height = img.size[1] / 2
@@ -71,19 +73,21 @@ def crop_center_circle(img, output_size, border, crop_scale=1.5):
     # Create a mask for the border
     mask_border = Image.new("L", (output_size, output_size), 0)
     draw_border = ImageDraw.Draw(mask_border)
-    draw_border.polygon(
-        [
-            (output_size / 2, border),  # Top point
-            (border, output_size - border),  # Bottom-left point
-            (output_size - border, output_size - border)  # Bottom-right point
-        ], 
-        fill=255
-    )
+    
+    # Draw the border with a slightly larger triangle
+    triangle_border_points = [
+        (output_size / 2, border / 2),  # Top point
+        (border / 2, output_size - border / 2),  # Bottom-left point
+        (output_size - border / 2, output_size - border / 2)  # Bottom-right point
+    ]
+    
+    draw_border.polygon(triangle_border_points, fill=255)
     
     # Apply the border mask
     result = Image.composite(final_img, Image.new("RGBA", final_img.size, (0, 0, 0, 0)), mask_border)
     
     return result
+
 
 
 
