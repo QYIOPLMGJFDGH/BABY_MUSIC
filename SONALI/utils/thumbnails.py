@@ -121,8 +121,7 @@ async def get_thumb(videoid):
                 f = await aiofiles.open(f"cache/thumb{videoid}.png", mode="wb")
                 await f.write(await resp.read())
                 await f.close()
-
-    youtube = Image.open(f"cache/thumb{videoid}.png")
+                youtube = Image.open(f"cache/thumb{videoid}.png")
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
     background = image2.filter(filter=ImageFilter.BoxBlur(20))
@@ -133,15 +132,11 @@ async def get_thumb(videoid):
     font = ImageFont.truetype("SONALI/assets/assets/font.ttf", 30)
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
-    # Create a green border around the thumbnail
-    border_size = 10  # Change this value to adjust the border thickness
-    bordered_background = Image.new("RGBA", (image1.width + 2 * border_size, image1.height + 2 * border_size), (0, 255, 0, 255))  # Green background
-    bordered_background.paste(background, (border_size, border_size))
 
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
     circle_position = (120, 160)
-    bordered_background.paste(circle_thumbnail, circle_position, circle_thumbnail)
+    background.paste(circle_thumbnail, circle_position, circle_thumbnail)
 
     text_x_position = 565
 
@@ -150,18 +145,24 @@ async def get_thumb(videoid):
     draw.text((text_x_position, 230), title1[1], fill=(255, 255, 255), font=title_font)
     draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
 
+    
     line_length = 580  
+
+    
     red_length = int(line_length * 0.6)
     white_length = line_length - red_length
 
+    
     start_point_red = (text_x_position, 380)
     end_point_red = (text_x_position + red_length, 380)
     draw.line([start_point_red, end_point_red], fill="red", width=9)
 
+    
     start_point_white = (text_x_position + red_length, 380)
     end_point_white = (text_x_position + line_length, 380)
     draw.line([start_point_white, end_point_white], fill="white", width=8)
 
+    
     circle_radius = 10 
     circle_position = (end_point_red[0], end_point_red[1])
     draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
@@ -171,11 +172,11 @@ async def get_thumb(videoid):
 
     play_icons = Image.open("SONALI/assets/assets/BABYMUSICPNG.png")
     play_icons = play_icons.resize((620, 150))
-    bordered_background.paste(play_icons, (text_x_position, 455), play_icons)
+    background.paste(play_icons, (text_x_position, 455), play_icons)
 
     try:
         os.remove(f"cache/thumb{videoid}.png")
     except:
         pass
-    bordered_background.save(f"cache/{videoid}_v4.png")
-    return f"cache/{videoid}_v4.png"
+    background.save(f"cache/{videoid}_v4.png")
+    return f"cache/{videoid}_v4.png
