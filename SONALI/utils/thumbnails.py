@@ -148,7 +148,7 @@ async def get_thumb(videoid):
     draw.text((text_x_position, 400), "00:00", (255, 255, 255), font=arial)
     draw.text((1080, 400), duration, (255, 255, 255), font=arial)
 
-    play_icons = Image.open("BABYMUSIC/assets/assets/BABYMUSICPNG.png")
+    play_icons = Image.open("SONALI/assets/assets/BABYMUSICPNG.png")
     play_icons = play_icons.resize((620, 150))
     background.paste(play_icons, (text_x_position, 455), play_icons)
 
