@@ -5,7 +5,7 @@ import aiohttp
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
 from unidecode import unidecode
 from youtubesearchpython.__future__ import VideosSearch
-from BABYMUSIC import app
+from SONALI import app
 from config import YOUTUBE_IMG_URL
 
 def changeImageSize(maxWidth, maxHeight, image):
@@ -30,7 +30,7 @@ def truncate(text):
     text2 = text2.strip()     
     return [text1,text2]
 
-def crop_center_circle(img, output_size, border, crop_scale=1.5):
+def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
     half_the_height = img.size[1] / 2
     larger_size = int(output_size * crop_scale)
@@ -45,24 +45,23 @@ def crop_center_circle(img, output_size, border, crop_scale=1.5):
     
     img = img.resize((output_size - 2*border, output_size - 2*border))
     
-    
     final_img = Image.new("RGBA", (output_size, output_size), "white")
     
-    
+    # Create a mask with a triangle
     mask_main = Image.new("L", (output_size - 2*border, output_size - 2*border), 0)
     draw_main = ImageDraw.Draw(mask_main)
-    draw_main.ellipse((0, 0, output_size - 2*border, output_size - 2*border), fill=255)
+    
+    # Coordinates for a triangle (centered in the image)
+    triangle_points = [
+        (output_size // 2, 0),  # Top center
+        (0, output_size - 2*border),  # Bottom left
+        (output_size - 2*border, output_size - 2*border)  # Bottom right
+    ]
+    draw_main.polygon(triangle_points, fill=255)
     
     final_img.paste(img, (border, border), mask_main)
     
-    
-    mask_border = Image.new("L", (output_size, output_size), 0)
-    draw_border = ImageDraw.Draw(mask_border)
-    draw_border.ellipse((0, 0, output_size, output_size), fill=255)
-    
-    result = Image.composite(final_img, Image.new("RGBA", final_img.size, (0, 0, 0, 0)), mask_border)
-    
-    return result
+    return final_img
 
 
 
@@ -112,7 +111,7 @@ async def get_thumb(videoid):
     title_font = ImageFont.truetype("BABYMUSIC/assets/assets/font3.ttf", 45)
 
 
-    circle_thumbnail = crop_center_circle(youtube, 400, 20)
+    circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
     circle_position = (120, 160)
     background.paste(circle_thumbnail, circle_position, circle_thumbnail)
