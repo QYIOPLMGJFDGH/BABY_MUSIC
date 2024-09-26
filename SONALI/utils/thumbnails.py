@@ -145,7 +145,7 @@ async def get_thumb(videoid):
     draw.rectangle([0, 0, background.width, background.height], outline=border_color, width=border_width)
 
     # Continue with the rest of your processing
-    circle_thumbnail = crop_center_triangle(youtube, 400, 20)
+    circle_thumbnail = crop_center_triangle_3d(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
     circle_position = (120, 160)
     background.paste(circle_thumbnail, circle_position, circle_thumbnail)
