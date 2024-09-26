@@ -79,7 +79,7 @@ def crop_center_triangle(img, output_size, border, crop_scale=1.5):
          (output_size - 2 * border + border, output_size - 2 * border + border))  # Bottom right offset
     ]
     draw_border = ImageDraw.Draw(final_img)
-    draw_border.polygon(border_points[0], fill=(100, 100, 100)
+    draw_border.polygon(border_points[0], fill='grey')
 
     # Combine the triangle mask without any scratch effects
     mask_combined = mask_main
