@@ -32,6 +32,9 @@ def truncate(text):
 
 from PIL import Image, ImageDraw
 
+import random
+from PIL import Image, ImageDraw, ImageFilter
+
 def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
     half_the_height = img.size[1] / 2
@@ -65,11 +68,28 @@ def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     ]
     draw_main.polygon(triangle_points, fill=255)
     
+    # Generate a rough scratch border around the triangle
+    scratch_mask = Image.new("L", (output_size - 2 * border, output_size - 2 * border), 0)
+    draw_scratch = ImageDraw.Draw(scratch_mask)
+    
+    # Add random scratches/noise around the triangle edges
+    for i in range(300):  # Increase or decrease for more or less scratches
+        # Generate random points near the edges of the triangle
+        x = random.randint(0, output_size - 2 * border)
+        y = random.randint(0, output_size - 2 * border)
+        if y > (output_size - 2 * border) // 2:  # Focus scratches on the edges
+            draw_scratch.point((x, y), fill=random.randint(100, 255))
+    
+    # Blur the scratch mask slightly to give a rough border look
+    scratch_mask = scratch_mask.filter(ImageFilter.GaussianBlur(2))
+    
+    # Combine the scratch mask with the original triangle mask
+    mask_combined = Image.composite(mask_main, scratch_mask, scratch_mask)
+    
     # Paste the cropped image into the triangle mask
-    final_img.paste(img, (border, border), mask_main)
+    final_img.paste(img, (border, border), mask_combined)
     
     return final_img
-
 
 
 
