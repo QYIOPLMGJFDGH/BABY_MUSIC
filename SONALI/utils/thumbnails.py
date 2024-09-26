@@ -60,14 +60,23 @@ def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     mask_main = Image.new("L", (output_size - 2 * border, output_size - 2 * border), 0)
     draw_main = ImageDraw.Draw(mask_main)
     
-    # Coordinates for a triangle (centered in the image)
+    # Coordinates for the main triangle (centered in the image)
     triangle_points = [
         ((output_size - 2 * border) // 2, 0),  # Top center
         (0, output_size - 2 * border),  # Bottom left
         (output_size - 2 * border, output_size - 2 * border)  # Bottom right
     ]
     draw_main.polygon(triangle_points, fill=255)
-    
+
+    # Draw the red border triangle
+    border_points = [
+        (((output_size - 2 * border) // 2, -border),  # Top center offset by border
+         (-border, output_size - 2 * border + border),  # Bottom left offset
+         (output_size - 2 * border + border, output_size - 2 * border + border))  # Bottom right offset
+    ]
+    draw_border = ImageDraw.Draw(final_img)
+    draw_border.polygon(border_points[0], fill='red')
+
     # Combine the triangle mask without any scratch effects
     mask_combined = mask_main
     
@@ -75,6 +84,7 @@ def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     final_img.paste(img, (border, border), mask_combined)
     
     return final_img
+
 
 
 
