@@ -30,10 +30,14 @@ def truncate(text):
     text2 = text2.strip()     
     return [text1,text2]
 
-def crop_center_circle(img, output_size, border, crop_scale=1.5):
+from PIL import Image, ImageDraw
+
+def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
     half_the_height = img.size[1] / 2
     larger_size = int(output_size * crop_scale)
+    
+    # Crop the image
     img = img.crop(
         (
             half_the_width - larger_size/2,
@@ -45,21 +49,38 @@ def crop_center_circle(img, output_size, border, crop_scale=1.5):
     
     img = img.resize((output_size - 2*border, output_size - 2*border))
     
-    
+    # Create the final image with a blue background
     final_img = Image.new("RGBA", (output_size, output_size), "blue")
     
-    
+    # Create a mask for the triangle shape
     mask_main = Image.new("L", (output_size - 2*border, output_size - 2*border), 0)
     draw_main = ImageDraw.Draw(mask_main)
-    draw_main.ellipse((0, 0, output_size - 2*border, output_size - 2*border), fill=255)
     
+    # Define points for the triangle (equilateral, centered)
+    triangle_points = [
+        ((output_size - 2*border) / 2, 0),  # Top point
+        (0, output_size - 2*border),        # Bottom-left point
+        (output_size - 2*border, output_size - 2*border)  # Bottom-right point
+    ]
+    
+    draw_main.polygon(triangle_points, fill=255)
+    
+    # Paste the cropped image onto the final image using the triangle mask
     final_img.paste(img, (border, border), mask_main)
     
-    
+    # Create a mask for the border
     mask_border = Image.new("L", (output_size, output_size), 0)
     draw_border = ImageDraw.Draw(mask_border)
-    draw_border.ellipse((0, 0, output_size, output_size), fill=255)
+    draw_border.polygon(
+        [
+            (output_size / 2, border),  # Top point
+            (border, output_size - border),  # Bottom-left point
+            (output_size - border, output_size - border)  # Bottom-right point
+        ], 
+        fill=255
+    )
     
+    # Apply the border mask
     result = Image.composite(final_img, Image.new("RGBA", final_img.size, (0, 0, 0, 0)), mask_border)
     
     return result
