@@ -174,34 +174,6 @@ async def get_thumb(videoid):
     play_icons = play_icons.resize((620, 150))
     background.paste(play_icons, (text_x_position, 455), play_icons)
 
-    from PIL import Image, ImageDraw, ImageOps
-
-# Create a blank white image
-size = 300  # Size of the image
-background = Image.new('RGB', (size, size), 'white')
-
-# Create a circle with a transparent background
-draw = ImageDraw.Draw(background)
-circle_radius = size // 2 - 50  # Adjust radius for border
-circle_center = (size // 2, size // 2)
-
-# Draw the four-core design in the circle
-colors = ['blue', 'green', 'yellow', 'purple']
-for i in range(4):
-    start_angle = i * 90
-    end_angle = (i + 1) * 90
-    draw.pieslice([circle_center[0] - circle_radius, circle_center[1] - circle_radius,
-                   circle_center[0] + circle_radius, circle_center[1] + circle_radius],
-                  start=start_angle, end=end_angle, fill=colors[i])
-
-# Add a black border around the circle
-bordered_background = ImageOps.expand(background, border=10, fill='black')
-
-# Save or show the image
-bordered_background.show()  # To display the image
-# bordered_background.save('circle_with_border.png')  # To save the image
-
-
     try:
         os.remove(f"cache/thumb{videoid}.png")
     except:
