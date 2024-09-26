@@ -30,38 +30,46 @@ def truncate(text):
     text2 = text2.strip()     
     return [text1,text2]
 
+from PIL import Image, ImageDraw
+
 def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
     half_the_height = img.size[1] / 2
     larger_size = int(output_size * crop_scale)
+    
+    # Crop the image
     img = img.crop(
         (
-            half_the_width - larger_size/2,
-            half_the_height - larger_size/2,
-            half_the_width + larger_size/2,
-            half_the_height + larger_size/2
+            half_the_width - larger_size / 2,
+            half_the_height - larger_size / 2,
+            half_the_width + larger_size / 2,
+            half_the_height + larger_size / 2
         )
     )
     
-    img = img.resize((output_size - 2*border, output_size - 2*border))
+    # Resize the image to fit inside the final image size
+    img = img.resize((output_size - 2 * border, output_size - 2 * border))
     
-    final_img = Image.new("RGBA", (output_size, output_size), "white")
+    # Create a transparent final image
+    final_img = Image.new("RGBA", (output_size, output_size), (0, 0, 0, 0))
     
-    # Create a mask with a triangle
-    mask_main = Image.new("L", (output_size - 2*border, output_size - 2*border), 0)
+    # Create a mask for the triangle
+    mask_main = Image.new("L", (output_size - 2 * border, output_size - 2 * border), 0)
     draw_main = ImageDraw.Draw(mask_main)
     
     # Coordinates for a triangle (centered in the image)
     triangle_points = [
-        (output_size // 2, 0),  # Top center
-        (0, output_size - 2*border),  # Bottom left
-        (output_size - 2*border, output_size - 2*border)  # Bottom right
+        ((output_size - 2 * border) // 2, 0),  # Top center
+        (0, output_size - 2 * border),  # Bottom left
+        (output_size - 2 * border, output_size - 2 * border)  # Bottom right
     ]
     draw_main.polygon(triangle_points, fill=255)
     
+    # Paste the cropped image into the triangle mask
     final_img.paste(img, (border, border), mask_main)
     
     return final_img
+
 
 
 
