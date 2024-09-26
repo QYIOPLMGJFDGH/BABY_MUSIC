@@ -86,7 +86,11 @@ def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     return final_img
 
 
-
+from PIL import ImageDraw, ImageFont, ImageEnhance, ImageFilter
+import os
+import re
+import aiohttp
+import aiofiles
 
 async def get_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}_v4.png"):
@@ -122,47 +126,50 @@ async def get_thumb(videoid):
                 await f.write(await resp.read())
                 await f.close()
                 youtube = Image.open(f"cache/thumb{videoid}.png")
+    
+    # Process the image
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
     background = image2.filter(filter=ImageFilter.BoxBlur(20))
     enhancer = ImageEnhance.Brightness(background)
     background = enhancer.enhance(0.6)
+    
     draw = ImageDraw.Draw(background)
     arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
     font = ImageFont.truetype("SONALI/assets/assets/font.ttf", 30)
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
+    # Add green border
+    border_width = 10  # Set the width of the border
+    border_color = (0, 255, 0)  # Green color
 
+    # Draw border
+    draw.rectangle([0, 0, background.width, background.height], outline=border_color, width=border_width)
+
+    # Continue with the rest of your processing
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
     circle_position = (120, 160)
     background.paste(circle_thumbnail, circle_position, circle_thumbnail)
 
     text_x_position = 565
-
     title1 = truncate(title)
     draw.text((text_x_position, 180), title1[0], fill=(255, 255, 255), font=title_font)
     draw.text((text_x_position, 230), title1[1], fill=(255, 255, 255), font=title_font)
     draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
 
-    
     line_length = 580  
-
-    
     red_length = int(line_length * 0.6)
     white_length = line_length - red_length
 
-    
     start_point_red = (text_x_position, 380)
     end_point_red = (text_x_position + red_length, 380)
     draw.line([start_point_red, end_point_red], fill="red", width=9)
 
-    
     start_point_white = (text_x_position + red_length, 380)
     end_point_white = (text_x_position + line_length, 380)
     draw.line([start_point_white, end_point_white], fill="white", width=8)
 
-    
     circle_radius = 10 
     circle_position = (end_point_red[0], end_point_red[1])
     draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
@@ -178,5 +185,6 @@ async def get_thumb(videoid):
         os.remove(f"cache/thumb{videoid}.png")
     except:
         pass
+    
     background.save(f"cache/{videoid}_v4.png")
-    return f"cache/{videoid}_v4.png
+    return f"cache/{videoid}_v4.png"
