@@ -145,7 +145,7 @@ async def get_thumb(videoid):
 
     # Add green border
     border_width = 20  # Set the width of the border
-    border_color = (255, 0, 0)  # Green color
+    border_color = "#4CBB17"  # Green color
 
     # Draw border
     draw.rectangle([0, 0, background.width, background.height], outline=border_color, width=border_width)
@@ -168,7 +168,7 @@ async def get_thumb(videoid):
 
     start_point_red = (text_x_position, 380)
     end_point_red = (text_x_position + red_length, 380)
-    draw.line([start_point_red, end_point_red], fill="red", width=9)
+    draw.line([start_point_red, end_point_red], fill="#4CBB17", width=9)
 
     start_point_white = (text_x_position + red_length, 380)
     end_point_white = (text_x_position + line_length, 380)
@@ -177,7 +177,7 @@ async def get_thumb(videoid):
     circle_radius = 10 
     circle_position = (end_point_red[0], end_point_red[1])
     draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
-                  circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill="red")
+                  circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill="#4CBB17")
     draw.text((text_x_position, 400), "00:00", (255, 255, 255), font=arial)
     draw.text((1080, 400), duration, (255, 255, 255), font=arial)
 
