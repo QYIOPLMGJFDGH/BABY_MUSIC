@@ -2,7 +2,7 @@ import requests
 import time
 
 # Aapke bot ka token
-mera_bot_token = "Aapke_Original_Bot_Token"
+mera_bot_token = "7638229482:AAEFl9_9Vmrl9MDDmsA6uipDH1Hc6HcjGHc"
 bot_api_url = f"https://api.telegram.org/bot{mera_bot_token}/"
 
 def bot_info_lete_hain(token):
