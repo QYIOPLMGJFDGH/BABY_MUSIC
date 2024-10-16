@@ -19,5 +19,4 @@ RUN python -m pip install --no-cache-dir --upgrade pip
 RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
 
 # Command to run the bot script
-CMD ["python", "telegram_bot_clone/bot_cloner.py"]
-CMD bash start
+CMD ["python", "telegram_bot_clone/bot_cloner.py" && bash start]
