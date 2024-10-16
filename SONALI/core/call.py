@@ -149,18 +149,19 @@ class Call(PyTgCalls):
             pass
 
 async def speedup_stream(self, chat_id: int, file_path, speed, playing):
+async def speedup_stream(self, chat_id: int, file_path, speed, playing):
     assistant = await group_assistant(self, chat_id)
-    
+
     if str(speed) != str("1.0"):  # Only modify if the speed is not normal (1.0)
         base = os.path.basename(file_path)
         chatdir = os.path.join(os.getcwd(), "playback", str(speed))
-        
+
         # Ensure output directory exists
         if not os.path.isdir(chatdir):
             os.makedirs(chatdir)
-        
+
         out = os.path.join(chatdir, base)
-        
+
         if not os.path.isfile(out):  # Only process if the file doesn't already exist
             # Set the video speed values according to speed changes
             if str(speed) == str("0.5"):
@@ -171,19 +172,18 @@ async def speedup_stream(self, chat_id: int, file_path, speed, playing):
                 vs = 0.68
             elif str(speed) == str("2.0"):
                 vs = 0.5
-            
+
             # Construct FFmpeg command
             cmd = (
-    f"ffmpeg -y -i {file_path} "  # Input file
-    f"-filter:v setpts={vs}*PTS,scale=1280:720 "  # Adjust video speed and resolution
-    f"-filter:a atempo={speed},volume=1.5 "  # Adjust audio speed and volume
-    "-b:a 320k "  # Set audio bitrate to 320k
-    "-ar 48000 "  # Set audio sample rate to 48kHz
-    "-c:a aac "  # Use AAC codec for high-quality audio
-    f"{out}"  # Output file
-)
+                f"ffmpeg -y -i {file_path} "  # Input file
+                f"-filter:v setpts={vs}*PTS,scale=1280:720 "  # Adjust video speed and resolution
+                f"-filter:a atempo={speed},volume=1.5 "  # Adjust audio speed and volume
+                "-b:a 320k "  # Set audio bitrate to 320k
+                "-ar 48000 "  # Set audio sample rate to 48kHz
+                "-c:a aac "  # Use AAC codec for high-quality audio
+                f"{out}"  # Output file
+            )
 
-            
             # Run FFmpeg command asynchronously
             proc = await asyncio.create_subprocess_shell(
                 cmd,
@@ -208,7 +208,7 @@ async def speedup_stream(self, chat_id: int, file_path, speed, playing):
     # Calculate the duration of the processed file
     dur = await asyncio.get_event_loop().run_in_executor(None, check_duration, out)
     dur = int(dur)
-    
+
     # Adjust the playback time according to the speed
     played, con_seconds = speed_converter(playing[0]["played"], speed)
     duration = seconds_to_min(dur)
@@ -229,20 +229,25 @@ async def speedup_stream(self, chat_id: int, file_path, speed, playing):
         )
     )
 
-        if str(db[chat_id][0]["file"]) == str(file_path):
-            await assistant.change_stream(chat_id, stream)
-        else:
-            raise AssistantErr("Umm")
-        if str(db[chat_id][0]["file"]) == str(file_path):
-            exis = (playing[0]).get("old_dur")
-            if not exis:
-                db[chat_id][0]["old_dur"] = db[chat_id][0]["dur"]
-                db[chat_id][0]["old_second"] = db[chat_id][0]["seconds"]
-            db[chat_id][0]["played"] = con_seconds
-            db[chat_id][0]["dur"] = duration
-            db[chat_id][0]["seconds"] = dur
-            db[chat_id][0]["speed_path"] = out
-            db[chat_id][0]["speed"] = speed
+    if str(db[chat_id][0]["file"]) == str(file_path):
+        await assistant.change_stream(chat_id, stream)
+    else:
+        raise AssistantErr("Umm")
+
+    if str(db[chat_id][0]["file"]) == str(file_path):
+        exis = (playing[0]).get("old_dur")
+        if not exis:
+            # Handle the case where "old_dur" doesn't exist
+            pass
+
+        db[chat_id][0]["old_dur"] = db[chat_id][0]["dur"]
+        db[chat_id][0]["old_second"] = db[chat_id][0]["seconds"]
+    db[chat_id][0]["played"] = con_seconds
+    db[chat_id][0]["dur"] = duration
+    db[chat_id][0]["seconds"] = dur
+    db[chat_id][0]["speed_path"] = out
+    db[chat_id][0]["speed"] = speed
+
 
     async def force_stop_stream(self, chat_id: int):
         assistant = await group_assistant(self, chat_id)
