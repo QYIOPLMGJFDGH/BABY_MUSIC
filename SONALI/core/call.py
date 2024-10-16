@@ -148,60 +148,83 @@ class Call(PyTgCalls):
         except:
             pass
 
-    async def speedup_stream(self, chat_id: int, file_path, speed, playing):
-        assistant = await group_assistant(self, chat_id)
-        if str(speed) != str("1.0"):
-            base = os.path.basename(file_path)
-            chatdir = os.path.join(os.getcwd(), "playback", str(speed))
-            if not os.path.isdir(chatdir):
-                os.makedirs(chatdir)
-            out = os.path.join(chatdir, base)
-            if not os.path.isfile(out):
-                if str(speed) == str("0.5"):
-                    vs = 2.0
-                if str(speed) == str("0.75"):
-                    vs = 1.35
-                if str(speed) == str("1.5"):
-                    vs = 0.68
-                if str(speed) == str("2.0"):
-                    vs = 0.5
-                proc = await asyncio.create_subprocess_shell(
-                    cmd=(
-                        "ffmpeg "
-                        "-i "
-                        f"{file_path} "
-                        "-filter:v "
-                        f"setpts={vs}*PTS "
-                        "-filter:a "
-                        f"atempo={speed} "
-                        f"{out}"
-                    ),
-                    stdin=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
-                )
-                await proc.communicate()
-            else:
-                pass
+async def speedup_stream(self, chat_id: int, file_path, speed, playing):
+    assistant = await group_assistant(self, chat_id)
+    
+    if str(speed) != str("1.0"):  # Only modify if the speed is not normal (1.0)
+        base = os.path.basename(file_path)
+        chatdir = os.path.join(os.getcwd(), "playback", str(speed))
+        
+        # Ensure output directory exists
+        if not os.path.isdir(chatdir):
+            os.makedirs(chatdir)
+        
+        out = os.path.join(chatdir, base)
+        
+        if not os.path.isfile(out):  # Only process if the file doesn't already exist
+            # Set the video speed values according to speed changes
+            if str(speed) == str("0.5"):
+                vs = 2.0
+            elif str(speed) == str("0.75"):
+                vs = 1.35
+            elif str(speed) == str("1.5"):
+                vs = 0.68
+            elif str(speed) == str("2.0"):
+                vs = 0.5
+            
+            # Construct FFmpeg command
+            cmd = (
+                f"ffmpeg -y -i {file_path} "  # Input file
+                f"-filter:v setpts={vs}*PTS,scale=1280:720 "  # Adjust video speed and resolution
+                f"-filter:a atempo={speed},volume=1.5 "  # Adjust audio speed and volume
+                f"{out}"  # Output file
+            )
+            
+            # Run FFmpeg command asynchronously
+            proc = await asyncio.create_subprocess_shell(
+                cmd,
+                stdin=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+
+            # Wait for FFmpeg process to complete
+            stdout, stderr = await proc.communicate()
+
+            # Check for errors
+            if proc.returncode != 0:
+                raise Exception(f"FFmpeg failed: {stderr.decode()}")
         else:
+            # Use existing processed file
             out = file_path
-        dur = await asyncio.get_event_loop().run_in_executor(None, check_duration, out)
-        dur = int(dur)
-        played, con_seconds = speed_converter(playing[0]["played"], speed)
-        duration = seconds_to_min(dur)
-        stream = (
-            AudioVideoPiped(
-                out,
-                audio_parameters=HighQualityAudio(),
-                video_parameters=MediumQualityVideo(),
-                additional_ffmpeg_parameters=f"-ss {played} -to {duration}",
-            )
-            if playing[0]["streamtype"] == "video"
-            else AudioPiped(
-                out,
-                audio_parameters=HighQualityAudio(),
-                additional_ffmpeg_parameters=f"-ss {played} -to {duration}",
-            )
+
+    # If speed is normal, use the original file
+    else:
+        out = file_path
+
+    # Calculate the duration of the processed file
+    dur = await asyncio.get_event_loop().run_in_executor(None, check_duration, out)
+    dur = int(dur)
+    
+    # Adjust the playback time according to the speed
+    played, con_seconds = speed_converter(playing[0]["played"], speed)
+    duration = seconds_to_min(dur)
+
+    # Set up the audio/video stream based on whether it's a video or audio
+    stream = (
+        AudioVideoPiped(
+            out,
+            audio_parameters=HighQualityAudio(),
+            video_parameters=MediumQualityVideo(),
+            additional_ffmpeg_parameters=f"-ss {played} -to {duration}",
         )
+        if playing[0]["streamtype"] == "video"
+        else AudioPiped(
+            out,
+            audio_parameters=HighQualityAudio(),
+            additional_ffmpeg_parameters=f"-ss {played} -to {duration}",
+        )
+    )
+
         if str(db[chat_id][0]["file"]) == str(file_path):
             await assistant.change_stream(chat_id, stream)
         else:
