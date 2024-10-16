@@ -174,11 +174,15 @@ async def speedup_stream(self, chat_id: int, file_path, speed, playing):
             
             # Construct FFmpeg command
             cmd = (
-                f"ffmpeg -y -i {file_path} "  # Input file
-                f"-filter:v setpts={vs}*PTS,scale=1280:720 "  # Adjust video speed and resolution
-                f"-filter:a atempo={speed},volume=1.5 "  # Adjust audio speed and volume
-                f"{out}"  # Output file
-            )
+    f"ffmpeg -y -i {file_path} "  # Input file
+    f"-filter:v setpts={vs}*PTS,scale=1280:720 "  # Adjust video speed and resolution
+    f"-filter:a atempo={speed},volume=1.5 "  # Adjust audio speed and volume
+    "-b:a 320k "  # Set audio bitrate to 320k
+    "-ar 48000 "  # Set audio sample rate to 48kHz
+    "-c:a aac "  # Use AAC codec for high-quality audio
+    f"{out}"  # Output file
+)
+
             
             # Run FFmpeg command asynchronously
             proc = await asyncio.create_subprocess_shell(
