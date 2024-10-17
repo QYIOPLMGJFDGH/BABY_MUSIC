@@ -134,26 +134,23 @@ async def get_thumb(videoid):
     # Process the image
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
+
+    # Instead of blur, add a colored stripe (patti)
+    border_width = 20  # Width of the colorful stripe
+    stripe_color = "#FF5733"  # Example: A vibrant orange color
     
-    # Create a blurred border by first expanding the image and then applying a blur
-    expanded_image = ImageOps.expand(image2, border=20)  # Expanding the image by 20px
-    blurred_border = expanded_image.filter(ImageFilter.BoxBlur(20))  # Apply blur to the expanded image
-    
-    enhancer = ImageEnhance.Brightness(blurred_border)
-    background = enhancer.enhance(0.6)
-    
-    draw = ImageDraw.Draw(background)
+    # Add the colored stripe to the border of the image
+    colored_border = ImageOps.expand(image2, border=border_width, fill=stripe_color)
+
+    # Continue with the rest of the processing
+    draw = ImageDraw.Draw(colored_border)
     arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
-    font = ImageFont.truetype("SONALI/assets/assets/font.ttf", 30)
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
-    # Remove the code that draws the green border and replace with the blurred background
-    
-    # Continue with the rest of your processing
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
     circle_position = (120, 160)
-    background.paste(circle_thumbnail, circle_position, circle_thumbnail)
+    colored_border.paste(circle_thumbnail, circle_position, circle_thumbnail)
 
     text_x_position = 565
     title1 = truncate(title)
@@ -182,12 +179,12 @@ async def get_thumb(videoid):
 
     play_icons = Image.open("SONALI/assets/assets/BABYMUSICPNG.png")
     play_icons = play_icons.resize((620, 150))
-    background.paste(play_icons, (text_x_position, 455), play_icons)
+    colored_border.paste(play_icons, (text_x_position, 455), play_icons)
 
     try:
         os.remove(f"cache/thumb{videoid}.png")
     except:
         pass
     
-    background.save(f"cache/{videoid}_v4.png")
+    colored_border.save(f"cache/{videoid}_v4.png")
     return f"cache/{videoid}_v4.png"
