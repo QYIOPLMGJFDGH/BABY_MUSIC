@@ -10,7 +10,7 @@ from config import BANNED_USERS, START_IMG_URL, SUPPORT_CHAT
 from strings import get_string, helpers
 from SONALI.utils.stuffs.buttons import BUTTONS
 from SONALI.utils.stuffs.helper import Helper
-from SONALI.utils.stuffs.helper import HELP_PROMO
+from SONALI.utils.stuffs.helper import PROMO
 @app.on_message(filters.command(["help"]) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(filters.regex("settings_back_helper") & ~BANNED_USERS)
 async def helper_private(
@@ -137,7 +137,13 @@ async def mb_plugin_button(client, CallbackQuery):
 @app.on_callback_query(filters.regex("promotext") & ~BANNED_USERS)
 async def promo_callback(client, CallbackQuery):
     try:
-        await CallbackQuery.answer(HELP_PROMO, show_alert=True)
+        await CallbackQuery.answer(PROMO.HELP_PROMO, show_alert=True)
+        await CallbackQuery.answer(PROMO.HELP_PROMO1, show_alert=True)
+        await CallbackQuery.answer(PROMO.HELP_PROMO2, show_alert=True)
+        await CallbackQuery.answer(PROMO.HELP_PROMO3, show_alert=True)
+        await CallbackQuery.answer(PROMO.HELP_PROMO4, show_alert=True)
+        await CallbackQuery.answer(PROMO.HELP_PROMO5, show_alert=True)
+        await CallbackQuery.answer(PROMO.HELP_PROMO6, show_alert=True)
     except Exception as e:
         print(f"Error: {e}")
 
