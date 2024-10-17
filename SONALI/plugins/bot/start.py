@@ -1,6 +1,6 @@
 import time
+import asyncio  # asyncio ko import karna na bhulein
 from pyrogram import filters
-import asyncio
 from pyrogram.errors import ChannelInvalid
 from pyrogram.enums import ChatType, ChatMembersFilter
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -30,14 +30,17 @@ async def start_pm(client, message: Message, _):
     await add_served_user(message.from_user.id)
     
     # Typing effect part
-    typing_message = await message.reply("I am a most powerful bot")
+    typing_message = await message.reply("Typing...")  # Initial message
     
     # Simulate typing
     typing_text = "I am a most powerful bot"
     
     for i in range(1, len(typing_text) + 1):  # Loop through each character
-        await typing_message.edit_text(typing_text[:i])
-        await asyncio.sleep(0.1)  # Add delay to simulate typing
+        try:
+            await typing_message.edit_text(typing_text[:i])
+            await asyncio.sleep(0.1)  # Add delay to simulate typing
+        except Exception as e:
+            print(f"Error while editing message: {e}")  # Print error if occurs
 
     await asyncio.sleep(2)  # Keep message for a while
     await typing_message.delete()  # Delete the message
@@ -45,7 +48,7 @@ async def start_pm(client, message: Message, _):
     # Continue with the existing logic after typing effect
     if len(message.text.split()) > 1:
         name = message.text.split(None, 1)[1]
- 
+
         if name[0:3] == "del":
             await del_plist_msg(client=client, message=message, _=_)
 
@@ -129,6 +132,9 @@ async def start_pm(client, message: Message, _):
                 chat_id=config.LOGGER_ID,
                 text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
             )
+
+# Rest of the code remains the same...
+
 
 
 
