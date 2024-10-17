@@ -134,8 +134,12 @@ async def get_thumb(videoid):
     # Process the image
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
-    background = image2.filter(filter=ImageFilter.BoxBlur(20))
-    enhancer = ImageEnhance.Brightness(background)
+    
+    # Create a blurred border by first expanding the image and then applying a blur
+    expanded_image = ImageOps.expand(image2, border=20)  # Expanding the image by 20px
+    blurred_border = expanded_image.filter(ImageFilter.BoxBlur(20))  # Apply blur to the expanded image
+    
+    enhancer = ImageEnhance.Brightness(blurred_border)
     background = enhancer.enhance(0.6)
     
     draw = ImageDraw.Draw(background)
@@ -143,13 +147,8 @@ async def get_thumb(videoid):
     font = ImageFont.truetype("SONALI/assets/assets/font.ttf", 30)
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
-    # Add green border
-    border_width = 20  # Set the width of the border
-    border_color = "#4CBB17"  # Green color
-
-    # Draw border
-    draw.rectangle([0, 0, background.width, background.height], outline=border_color, width=border_width)
-
+    # Remove the code that draws the green border and replace with the blurred background
+    
     # Continue with the rest of your processing
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
