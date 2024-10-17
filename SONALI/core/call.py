@@ -48,16 +48,27 @@ class Call(PyTgCalls):
 
     async def _manage_stream(self, chat_id, method, *args):
         assistant = await group_assistant(self, chat_id)
-        await getattr(assistant, method)(chat_id, *args)
+        # Check if the method exists in the assistant object to avoid AttributeError
+        if hasattr(assistant, method):
+            await getattr(assistant, method)(chat_id, *args)
+        else:
+            LOGGER(__name__).error(f"Method {method} not found in assistant!")
 
-    async def pause_stream(self, chat_id): await self._manage_stream(chat_id, 'pause_stream')
-    async def resume_stream(self, chat_id): await self._manage_stream(chat_id, 'resume_stream')
-    async def stop_stream(self, chat_id): await self._manage_stream(chat_id, 'leave_group_call')
+    async def pause_stream(self, chat_id): 
+        await self._manage_stream(chat_id, 'pause_stream')
+    
+    async def resume_stream(self, chat_id): 
+        await self._manage_stream(chat_id, 'resume_stream')
+    
+    async def stop_stream(self, chat_id): 
+        await self._manage_stream(chat_id, 'leave_group_call')
 
     async def stop_stream_force(self, chat_id):
         for client in self.clients:
-            try: await client.leave_group_call(chat_id)
-            except: pass
+            try: 
+                await client.leave_group_call(chat_id)
+            except Exception as e:
+                LOGGER(__name__).error(f"Error leaving group call: {e}")
         await _clear_(chat_id)
 
     async def speedup_stream(self, chat_id, file_path, speed, playing):
@@ -82,11 +93,17 @@ class Call(PyTgCalls):
 
     async def _change_stream(self, chat_id, assistant, file_path, playing):
         dur = await asyncio.get_event_loop().run_in_executor(None, check_duration, file_path)
-        played, con_seconds = speed_converter(playing[0]["played"], speed)
+        played, con_seconds = speed_converter(playing[0]["played"], playing[0]["speed"])
         stream = AudioVideoPiped(file_path, audio_parameters=HighQualityAudio()) \
             if playing[0]["streamtype"] == "video" else AudioPiped(file_path, audio_parameters=HighQualityAudio())
         await assistant.change_stream(chat_id, stream)
-        db[chat_id][0].update({"played": con_seconds, "dur": seconds_to_min(dur), "seconds": dur, "speed_path": file_path, "speed": speed})
+        db[chat_id][0].update({
+            "played": con_seconds, 
+            "dur": seconds_to_min(dur), 
+            "seconds": dur, 
+            "speed_path": file_path, 
+            "speed": playing[0]["speed"]
+        })
 
     async def change_stream(self, client, chat_id):
         check, loop = db.get(chat_id), await get_loop(chat_id)
@@ -96,7 +113,8 @@ class Call(PyTgCalls):
             else:
                 await set_loop(chat_id, loop - 1)
             await auto_clean(check[0])
-        except:
+        except Exception as e:
+            LOGGER(__name__).error(f"Error in change_stream: {e}")
             await _clear_(chat_id)
             return await client.leave_group_call(chat_id)
         
@@ -118,7 +136,8 @@ class Call(PyTgCalls):
 
     async def decorators(self):
         @self.clients[0].on_kicked()
-        async def stream_services_handler(_, chat_id): await self.stop_stream(chat_id)
+        async def stream_services_handler(_, chat_id): 
+            await self.stop_stream(chat_id)
 
         @self.clients[0].on_stream_end()
         async def stream_end_handler1(client, update): 
