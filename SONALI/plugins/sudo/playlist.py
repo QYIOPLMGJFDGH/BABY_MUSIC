@@ -19,6 +19,7 @@ from SONALI.utils.inline.playlist import (
     get_playlist_markup,
     warning_markup,
 )
+from SONALI.utils.pastebin import RAUSHANBin as UTTAMbin
 from SONALI.utils.stream.stream import stream
 
 # Command
@@ -96,7 +97,7 @@ async def check_playlist(client, message: Message, _):
         count += 1
         msg += f"\n\n{count}- {title[:70]}\n"
         msg += _["playlist_5"].format(duration)
-    link = await RAUSHANbin(msg)
+    link = await UTTAMbin(msg)
     lines = msg.count("\n")
     if lines >= 17:
         car = os.linesep.join(msg.split(os.linesep)[:17])
