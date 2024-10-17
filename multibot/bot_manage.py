@@ -20,7 +20,7 @@ class BotManager:
     def add_bot(self, token):
         if token not in self.bots:
             # Set the webhook for the new bot
-            webhook_url = f"https://yourdomain.com/{token}/webhook"
+            webhook_url = f"https://sonalitedttttt-372eb29afe86.herokuapp.com/7252944407:AAHwmQeuRTFmFqHcXSmHLWKiuMF4bWfPLWk/webhook"
             response = self.set_webhook(token, webhook_url)
             if response['ok']:
                 self.bots[token] = {'webhook_url': webhook_url}
@@ -29,7 +29,7 @@ class BotManager:
         return False
 
     def set_webhook(self, bot_token, webhook_url):
-        url = f"https://api.telegram.org/bot{bot_token}/setWebhook"
+        url = f"https://api.telegram.org/bot7252944407:AAHwmQeuRTFmFqHcXSmHLWKiuMF4bWfPLWk/setWebhook"
         data = {"url": webhook_url}
         return requests.post(url, data=data).json()
 
