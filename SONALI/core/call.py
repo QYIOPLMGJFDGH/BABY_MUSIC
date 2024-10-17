@@ -47,20 +47,26 @@ class Call(PyTgCalls):
         return PyTgCalls(userbot, cache_duration=100)
 
     async def _manage_stream(self, chat_id, method, *args):
-        assistant = await group_assistant(self, chat_id)
-        # Check if the method exists in the assistant object to avoid AttributeError
-        if hasattr(assistant, method):
-            await getattr(assistant, method)(chat_id, *args)
-        else:
-            LOGGER(__name__).error(f"Method {method} not found in assistant!")
+        try:
+            assistant = await group_assistant(self, chat_id)
+            if hasattr(assistant, method):
+                await getattr(assistant, method)(chat_id, *args)
+            else:
+                LOGGER(__name__).error(f"Method {method} does not exist on assistant {assistant}")
+        except AttributeError as e:
+            LOGGER(__name__).error(f"AttributeError in _manage_stream: {e}")
+            raise
+        except Exception as e:
+            LOGGER(__name__).error(f"Error managing stream: {e}")
+            raise
 
-    async def pause_stream(self, chat_id): 
+    async def pause_stream(self, chat_id):
         await self._manage_stream(chat_id, 'pause_stream')
-    
-    async def resume_stream(self, chat_id): 
+
+    async def resume_stream(self, chat_id):
         await self._manage_stream(chat_id, 'resume_stream')
-    
-    async def stop_stream(self, chat_id): 
+
+    async def stop_stream(self, chat_id):
         await self._manage_stream(chat_id, 'leave_group_call')
 
     async def stop_stream_force(self, chat_id):
@@ -68,16 +74,20 @@ class Call(PyTgCalls):
             try: 
                 await client.leave_group_call(chat_id)
             except Exception as e:
-                LOGGER(__name__).error(f"Error leaving group call: {e}")
+                LOGGER(__name__).error(f"Error stopping stream forcefully: {e}")
         await _clear_(chat_id)
 
     async def speedup_stream(self, chat_id, file_path, speed, playing):
-        assistant = await group_assistant(self, chat_id)
-        if str(speed) != "1.0":
-            out = await self._process_speed(file_path, speed)
-        else:
-            out = file_path
-        await self._change_stream(chat_id, assistant, out, playing)
+        try:
+            assistant = await group_assistant(self, chat_id)
+            if str(speed) != "1.0":
+                out = await self._process_speed(file_path, speed)
+            else:
+                out = file_path
+            await self._change_stream(chat_id, assistant, out, playing)
+        except Exception as e:
+            LOGGER(__name__).error(f"Error in speedup_stream: {e}")
+            raise
 
     async def _process_speed(self, file_path, speed):
         chatdir = os.path.join(os.getcwd(), "playback", str(speed))
@@ -92,18 +102,22 @@ class Call(PyTgCalls):
         return out
 
     async def _change_stream(self, chat_id, assistant, file_path, playing):
-        dur = await asyncio.get_event_loop().run_in_executor(None, check_duration, file_path)
-        played, con_seconds = speed_converter(playing[0]["played"], playing[0]["speed"])
-        stream = AudioVideoPiped(file_path, audio_parameters=HighQualityAudio()) \
-            if playing[0]["streamtype"] == "video" else AudioPiped(file_path, audio_parameters=HighQualityAudio())
-        await assistant.change_stream(chat_id, stream)
-        db[chat_id][0].update({
-            "played": con_seconds, 
-            "dur": seconds_to_min(dur), 
-            "seconds": dur, 
-            "speed_path": file_path, 
-            "speed": playing[0]["speed"]
-        })
+        try:
+            dur = await asyncio.get_event_loop().run_in_executor(None, check_duration, file_path)
+            played, con_seconds = speed_converter(playing[0]["played"], playing[0]["speed"])
+            stream = AudioVideoPiped(file_path, audio_parameters=HighQualityAudio()) \
+                if playing[0]["streamtype"] == "video" else AudioPiped(file_path, audio_parameters=HighQualityAudio())
+            await assistant.change_stream(chat_id, stream)
+            db[chat_id][0].update({
+                "played": con_seconds, "dur": seconds_to_min(dur), 
+                "seconds": dur, "speed_path": file_path, "speed": playing[0]["speed"]
+            })
+        except AttributeError as e:
+            LOGGER(__name__).error(f"AttributeError in _change_stream: {e}")
+            raise
+        except Exception as e:
+            LOGGER(__name__).error(f"Error in _change_stream: {e}")
+            raise
 
     async def change_stream(self, client, chat_id):
         check, loop = db.get(chat_id), await get_loop(chat_id)
@@ -121,14 +135,25 @@ class Call(PyTgCalls):
         await self._play_next(client, chat_id, check)
 
     async def _play_next(self, client, chat_id, check):
-        queued, streamtype = check[0]["file"], check[0]["streamtype"]
-        video = streamtype == "video"
-        stream = AudioVideoPiped(queued, audio_parameters=HighQualityAudio()) if video else AudioPiped(queued)
-        await client.change_stream(chat_id, stream)
+        try:
+            queued, streamtype = check[0]["file"], check[0]["streamtype"]
+            video = streamtype == "video"
+            stream = AudioVideoPiped(queued, audio_parameters=HighQualityAudio()) if video else AudioPiped(queued)
+            await client.change_stream(chat_id, stream)
+        except AttributeError as e:
+            LOGGER(__name__).error(f"AttributeError in _play_next: {e}")
+            raise
+        except Exception as e:
+            LOGGER(__name__).error(f"Error in _play_next: {e}")
+            raise
 
     async def ping(self):
-        pings = [await client.ping for client in self.clients]
-        return str(round(sum(pings) / len(pings), 3))
+        try:
+            pings = [await client.ping for client in self.clients]
+            return str(round(sum(pings) / len(pings), 3))
+        except Exception as e:
+            LOGGER(__name__).error(f"Error pinging clients: {e}")
+            raise
 
     async def start(self):
         LOGGER(__name__).info("Starting PyTgCalls Client...\n")
