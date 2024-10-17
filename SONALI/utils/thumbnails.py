@@ -1,100 +1,37 @@
 import os
 import re
-import aiofiles
 import aiohttp
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
-from unidecode import unidecode
-from youtubesearchpython.__future__ import VideosSearch
-from SONALI import app
-from config import YOUTUBE_IMG_URL
+import aiofiles
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps, ImageEnhance
+from youtubesearchpython import VideosSearch
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
     heightRatio = maxHeight / image.size[1]
-    newWidth = int(widthRatio * image.size[0])
-    newHeight = int(heightRatio * image.size[1])
-    newImage = image.resize((newWidth, newHeight))
-    return newImage
+    newWidth = int(image.size[0] * widthRatio)
+    newHeight = int(image.size[1] * heightRatio)
+    return image.resize((newWidth, newHeight), Image.ANTIALIAS)
+
+def crop_center_triangle(image, size, border):
+    width, height = image.size
+    new_image = image.crop(((width - size) // 2, (height - size) // 2, (width + size) // 2, (height + size) // 2))
+    return ImageOps.expand(new_image, border=border, fill=(255, 255, 255))
+
+def create_gradient(size, colors):
+    width, height = size
+    gradient = Image.new('RGB', (width, height), color=0)
+    draw = ImageDraw.Draw(gradient)
+
+    for i, color in enumerate(colors):
+        draw.rectangle([i * (width // len(colors)), 0, (i + 1) * (width // len(colors)), height], fill=color)
+    
+    return gradient
 
 def truncate(text):
-    list = text.split(" ")
-    text1 = ""
-    text2 = ""    
-    for i in list:
-        if len(text1) + len(i) < 30:        
-            text1 += " " + i
-        elif len(text2) + len(i) < 30:       
-            text2 += " " + i
-
-    text1 = text1.strip()
-    text2 = text2.strip()     
-    return [text1,text2]
-
-from PIL import Image, ImageDraw, ImageOps
-
-import random
-from PIL import Image, ImageDraw, ImageFilter
-
-from PIL import Image, ImageDraw
-
-from PIL import Image, ImageDraw
-
-def crop_center_triangle(img, output_size, border, crop_scale=1.5):
-    half_the_width = img.size[0] / 2
-    half_the_height = img.size[1] / 2
-    larger_size = int(output_size * crop_scale)
-    
-    # Crop the image
-    img = img.crop(
-        (
-            half_the_width - larger_size / 2,
-            half_the_height - larger_size / 2,
-            half_the_width + larger_size / 2,
-            half_the_height + larger_size / 2
-        )
-    )
-    
-    # Resize the image to fit inside the final image size
-    img = img.resize((output_size - 2 * border, output_size - 2 * border))
-    
-    # Create a transparent final image
-    final_img = Image.new("RGBA", (output_size, output_size), (0, 0, 0, 0))
-    
-    # Create a mask for the triangle
-    mask_main = Image.new("L", (output_size - 2 * border, output_size - 2 * border), 0)
-    draw_main = ImageDraw.Draw(mask_main)
-    
-    # Coordinates for the main triangle (centered in the image)
-    triangle_points = [
-        ((output_size - 2 * border) // 2, 0),  # Top center
-        (0, output_size - 2 * border),  # Bottom left
-        (output_size - 2 * border, output_size - 2 * border)  # Bottom right
-    ]
-    draw_main.polygon(triangle_points, fill=255)
-
-    # Draw the red border triangle
-    border_points = [
-        (((output_size - 2 * border) // 2, -border),  # Top center offset by border
-         (-border, output_size - 2 * border + border),  # Bottom left offset
-         (output_size - 2 * border + border, output_size - 2 * border + border))  # Bottom right offset
-    ]
-    draw_border = ImageDraw.Draw(final_img)
-    draw_border.polygon(border_points[0], fill='grey')
-
-    # Combine the triangle mask without any scratch effects
-    mask_combined = mask_main
-    
-    # Paste the cropped image into the triangle mask
-    final_img.paste(img, (border, border), mask_combined)
-    
-    return final_img
-
-
-from PIL import ImageDraw, ImageFont, ImageEnhance, ImageFilter
-import os
-import re
-import aiohttp
-import aiofiles
+    words = text.split()
+    if len(words) > 2:
+        return ' '.join(words[:2]), ' '.join(words[2:])
+    return text, ''
 
 async def get_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}_v4.png"):
