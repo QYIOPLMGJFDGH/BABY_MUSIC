@@ -72,6 +72,15 @@ def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     ]
     draw_main.polygon(triangle_points, fill=255)
 
+    # Draw the red border triangle
+    border_points = [
+        (((output_size - 2 * border) // 2, -border),  # Top center offset by border
+         (-border, output_size - 2 * border + border),  # Bottom left offset
+         (output_size - 2 * border + border, output_size - 2 * border + border))  # Bottom right offset
+    ]
+    draw_border = ImageDraw.Draw(final_img)
+    draw_border.polygon(border_points[0], fill='grey')
+
     # Combine the triangle mask without any scratch effects
     mask_combined = mask_main
     
@@ -127,15 +136,13 @@ async def get_thumb(videoid):
     image2 = image1.convert("RGBA")
     background = image2.filter(filter=ImageFilter.BoxBlur(20))
     enhancer = ImageEnhance.Brightness(background)
-    background = enhancer.enhance(0.9)
+    background = enhancer.enhance(0.6)
     
     draw = ImageDraw.Draw(background)
     arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
     font = ImageFont.truetype("SONALI/assets/assets/font.ttf", 30)
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
-
-    # Green border removed
-
+    
     # Continue with the rest of your processing
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
