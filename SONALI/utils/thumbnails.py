@@ -130,7 +130,7 @@ async def get_thumb(videoid):
                 await f.write(await resp.read())
                 await f.close()
                 youtube = Image.open(f"cache/thumb{videoid}.png")
-    
+
     # Resize the image
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
@@ -138,28 +138,32 @@ async def get_thumb(videoid):
     # Blur the entire background
     blurred_background = image2.filter(ImageFilter.BoxBlur(20))
 
-    # Enhance brightness if needed
+    # Enhance brightness
     enhancer = ImageEnhance.Brightness(blurred_background)
     blurred_background = enhancer.enhance(0.6)
 
-    # Now we add the colorful stripe around the blurred background
-    border_width = 20  # Width of the colorful stripe
-    stripe_color = "#FF5733"  # Example: A vibrant orange color (you can change it to any color)
+    # Now we create a gradient colorful border
+    border_width = 30  # Width of the colorful stripe
+    gradient_colors = ["#FF5733", "#33FF57", "#5733FF", "#FF33A8", "#FFDF33"]  # Some vibrant colors
+    gradient_border = create_gradient((blurred_background.width + 2 * border_width, 
+                                       blurred_background.height + 2 * border_width), gradient_colors)
+    
+    # Add the colored gradient border
+    bordered_image = ImageOps.expand(blurred_background, border=border_width, fill=0)
+    bordered_image.paste(gradient_border, (0, 0))
 
-    # Add the colored stripe around the image (background)
-    colored_border = ImageOps.expand(blurred_background, border=border_width, fill=stripe_color)
-
-    draw = ImageDraw.Draw(colored_border)
+    # Drawing the elements (title, views, channel, etc.)
+    draw = ImageDraw.Draw(bordered_image)
     arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
-    # Keep the triangle thumbnail sharp and paste it after background blur
+    # Circular thumbnail
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
 
     # Position of the sharp triangle thumbnail
     circle_position = (120, 160)
-    colored_border.paste(circle_thumbnail, circle_position, circle_thumbnail)
+    bordered_image.paste(circle_thumbnail, circle_position, circle_thumbnail)
 
     # Add the text and other elements on top of the blurred background
     text_x_position = 565
@@ -181,6 +185,7 @@ async def get_thumb(videoid):
     end_point_white = (text_x_position + line_length, 380)
     draw.line([start_point_white, end_point_white], fill="white", width=8)
 
+    # Circle at the end of the line
     circle_radius = 10 
     circle_position = (end_point_red[0], end_point_red[1])
     draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
@@ -189,14 +194,16 @@ async def get_thumb(videoid):
     draw.text((text_x_position, 400), "00:00", (255, 255, 255), font=arial)
     draw.text((1080, 400), duration, (255, 255, 255), font=arial)
 
+    # Play icons
     play_icons = Image.open("SONALI/assets/assets/BABYMUSICPNG.png")
     play_icons = play_icons.resize((620, 150))
-    colored_border.paste(play_icons, (text_x_position, 455), play_icons)
+    bordered_image.paste(play_icons, (text_x_position, 455), play_icons)
 
     try:
         os.remove(f"cache/thumb{videoid}.png")
     except:
         pass
-    
-    colored_border.save(f"cache/{videoid}_v4.png")
+
+    # Save the final image
+    bordered_image.save(f"cache/{videoid}_v4.png")
     return f"cache/{videoid}_v4.png"
