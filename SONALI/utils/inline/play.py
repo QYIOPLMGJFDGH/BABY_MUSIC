@@ -39,13 +39,6 @@ def track_markup(_, videoid, user_id, channel, fplay):
             InlineKeyboardButton(text="˹ ᴘɾꪮɱꪮᴛιꪮɳ ᴀʋᴀιʅᴀʙʅҽ ˼", callback_data=f"promotext"),
         ],
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
-        ],
-        [
             InlineKeyboardButton(
                 text="˹ ᴜᴘᴅᴀᴛҽ ˼", url="https://t.me/BABY09_WORLD",
             ),
