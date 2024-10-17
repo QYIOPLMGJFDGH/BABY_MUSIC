@@ -142,11 +142,11 @@ async def get_thumb(videoid):
     enhancer = ImageEnhance.Brightness(blurred_background)
     blurred_background = enhancer.enhance(0.6)
 
-    # Now we add the colored stripe around the blurred background
+    # Now we add the colorful stripe around the blurred background
     border_width = 20  # Width of the colorful stripe
-    stripe_color = "#FF5733"  # Example: A vibrant orange color
-    
-    # Add the colored stripe around the image
+    stripe_color = "#FF5733"  # Example: A vibrant orange color (you can change it to any color)
+
+    # Add the colored stripe around the image (background)
     colored_border = ImageOps.expand(blurred_background, border=border_width, fill=stripe_color)
 
     draw = ImageDraw.Draw(colored_border)
