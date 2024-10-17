@@ -19,7 +19,7 @@ from SONALI.utils.inline.playlist import (
     get_playlist_markup,
     warning_markup,
 )
-from SONALI.utils.pastebin import YTBin as Yukkibin
+from SONALI.utils.pastebin import RAUSHANBin as Yukkibin
 from SONALI.utils.stream.stream import stream
 
 # Command
