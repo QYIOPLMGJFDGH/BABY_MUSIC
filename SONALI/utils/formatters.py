@@ -13,35 +13,33 @@ def download_chunk(url, start, end, filename, session):
 
 def download_file(vidid, audio=True, num_threads=10):
     link = 'https://api.cobalt.tools/api/json'
-    headers = {'Accept': 'application/json','Content-Type': 'application/json'}
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
     if audio:
         data = {
             'url': 'https://www.youtube.com/watch?v=LLF3GMfNEYU',
             'isAudioOnly': 'True',
-            'aFormat' : 'opus'
+            'aFormat': 'aac',  # 'aac' ya kisi aur high-quality format ka chayan
+            'bitrate': '320k'  # Agar API support kare to bitrate specify karein
         }
     else:
         data = {
             'url': 'https://www.youtube.com/watch?v=LLF3GMfNEYU',
-            'vQuality': '240'
+            'vQuality': '1080'  # Video quality ke liye zyada resolution ka chayan
         }
-    url = requests.post(link, headers=headers, json=data).json()['url']
+    
+    url = requests.post(link, headers=headers, json=data).json().get('url')
+    
+    # Baaki ka code waise hi rahega
     session = requests.Session()
     response = session.head(url)
-    if audio:
-        filename = os.path.join("downloads", f"{vidid}.mp3")
-    else:
-        filename = os.path.join("downloads", f"{vidid}.mp4")
-
+    filename = os.path.join("downloads", f"{vidid}.mp3" if audio else f"{vidid}.mp4")
+    
     total_size = response.headers.get('Content-Length')
     if total_size is None:
-        if audio:
-            total_size = 1024 * 1024 * 50
-        else: 
-            total_size = 1024 * 1024 * 100
+        total_size = 1024 * 1024 * 50 if audio else 1024 * 1024 * 100
     else:
         total_size = int(total_size)
-
 
     total_size = int(total_size)
     chunk_size = total_size // num_threads
@@ -60,6 +58,7 @@ def download_file(vidid, audio=True, num_threads=10):
     for t in threads:
         t.join()
     return filename
+
         
 
 
