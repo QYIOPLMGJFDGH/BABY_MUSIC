@@ -39,6 +39,9 @@ def track_markup(_, videoid, user_id, channel, fplay):
             InlineKeyboardButton(text="˹ ᴘɾꪮɱꪮᴛιꪮɳ ᴀʋᴀιʅᴀʙʅҽ ˼", callback_data=f"promotext"),
         ],
         [
+            InlineKeyboardButton(text="˹ ⚘ sᴀᴠҽ ᴛʜιs sꪮɳɠ ⚘ ˼", callback_data=f"add_playlist"),
+        ],
+        [
             InlineKeyboardButton(
                 text="˹ ᴜᴘᴅᴀᴛҽ ˼", url="https://t.me/BABY09_WORLD",
             ),
@@ -58,6 +61,9 @@ def stream_markup(_, videoid, chat_id):
     buttons = [
         [
             InlineKeyboardButton(text="˹ ᴘɾꪮɱꪮᴛιꪮɳ ᴀʋᴀιʅᴀʙʅҽ ˼", callback_data=f"promotext"),
+        ],
+        [
+            InlineKeyboardButton(text="˹ ⚘ sᴀᴠҽ ᴛʜιs sꪮɳɠ ⚘ ˼", callback_data=f"add_playlist"),
         ],
         [
             InlineKeyboardButton(
