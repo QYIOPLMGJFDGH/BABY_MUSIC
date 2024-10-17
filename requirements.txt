@@ -70,3 +70,4 @@ urllib3
 git+https://github.com/alexmercerind/youtube-search-python@main
 git+https://github.com/joetats/youtube_search@master
 git+https://github.com/BABY-MUSIC/teambabyAPI
+pyTelegramBotAPI==4.12.0  # Ya latest version jo available ho
