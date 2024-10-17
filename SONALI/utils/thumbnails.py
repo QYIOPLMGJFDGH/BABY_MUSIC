@@ -134,9 +134,9 @@ async def get_thumb(videoid):
     # Process the image
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
-    background = image2.filter(filter=ImageFilter.BoxBlur(20))
+    background = image2.filter(filter=ImageFilter.BoxBlur(15))
     enhancer = ImageEnhance.Brightness(background)
-    background = enhancer.enhance(0.6)
+    background = enhancer.enhance(0.9)
     
     draw = ImageDraw.Draw(background)
     arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
