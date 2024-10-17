@@ -31,40 +31,7 @@ async def start_pm(client, message: Message, _):
     # Typing effect part
     typing_message = await message.reply("I am a most powerful bot")
     
-    for _ in range(3):  # Simulate typing
-import time
-import asyncio  # Make sure asyncio is imported
-from pyrogram import filters
-from pyrogram.errors import ChannelInvalid
-from pyrogram.enums import ChatType, ChatMembersFilter
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
-from youtubesearchpython.__future__ import VideosSearch
-import config
-from SONALI import app
-from SONALI.misc import _boot_
-from SONALI.plugins.sudo.sudoers import sudoers_list
-from SONALI.utils.database import (
-    add_served_chat,
-    add_served_user,
-    blacklisted_chats,
-    get_lang,
-    is_banned_user,
-    is_on_off,
-    connect_to_chat,
-)
-from SONALI.utils.decorators.language import LanguageStart
-from SONALI.utils.formatters import get_readable_time
-from SONALI.utils.inline import help_pannel, private_panel, start_panel
-from config import BANNED_USERS
-from strings import get_string
-
-@app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
-@LanguageStart
-async def start_pm(client, message: Message, _):
-    await add_served_user(message.from_user.id)
-    
-    # Typing effect part
-    typing_message = await message.reply("I")
+    # Simulate typing
     typing_text = "I am a most powerful bot"
     
     for i in range(1, len(typing_text) + 1):  # Loop through each character
@@ -77,7 +44,7 @@ async def start_pm(client, message: Message, _):
     # Continue with the existing logic after typing effect
     if len(message.text.split()) > 1:
         name = message.text.split(None, 1)[1]
-
+ 
         if name[0:3] == "del":
             await del_plist_msg(client=client, message=message, _=_)
 
