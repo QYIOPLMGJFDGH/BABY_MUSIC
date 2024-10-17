@@ -64,12 +64,15 @@ def track_markup(_, videoid, user_id, channel, fplay):
 def stream_markup(_, videoid, chat_id):
     buttons = [
         [
+            InlineKeyboardButton(text="˹ ᴘɾꪮɱꪮᴛιꪮɳ ᴀʋᴀιʅᴀʙʅҽ ˼", callback_data=f"promotext"),
+        ],
+        [
             InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
             InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
             InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
             InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
-         ],
+        ],
         [
             InlineKeyboardButton(
                 text="• ❍ᴡɴᴇꝛ •", url="https://t.me/uttam470",
@@ -78,7 +81,9 @@ def stream_markup(_, videoid, chat_id):
                 text="• 𝛅ᴜᴘᴘᴏꝛᴛ •", url="https://t.me/+OL6jdTL7JAJjYzVl",
             )
         ],
-        [InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close")],
+        [
+            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="𝛓ʟᴏsᴇ"),
+        ]
     ]
 
     return buttons
