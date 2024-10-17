@@ -36,7 +36,7 @@ def track_markup(_, videoid, user_id, channel, fplay):
 
     buttons = [
         [
-            InlineKeyboardButton(text="˹ ᴘɾꪮɱꪮᴛιꪮɳ ᴀʋᴀιʅᴀʙʅҽ ˼", callback_data="cbot"),
+            InlineKeyboardButton(text="˹ ᴘɾꪮɱꪮᴛιꪮɳ ᴀʋᴀιʅᴀʙʅҽ ˼", callback_data="promotext"),
         ],
         [
             InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
