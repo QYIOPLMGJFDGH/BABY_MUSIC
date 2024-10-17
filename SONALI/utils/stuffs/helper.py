@@ -1,5 +1,12 @@
-# helper for strings
-HELP_PROMO = HELP_PROMO = "Service Available: Heroku CC Add + Account, Paid Promo + Bot Hosting. Contact Owner."
+class PROMO(object):
+    HELP_PROMO = "❍ sᴇʀᴠɪᴄᴇ ᴀᴠᴀɪʟᴀʙʟᴇ ⎚\n╭───────────────────⦿"
+    HELP_PROMO1 = "│❍ ʜᴇʀᴏᴋᴜ ᴄᴄ ᴀᴅᴅ + ᴀᴄᴄᴏᴜɴᴛ ⎚\n│❍ ᴘᴀɪᴅ ᴘʀᴏᴍᴏ + ʙᴏᴛ ʜᴏsᴛɪɴɢ⎚"
+    HELP_PROMO2 = "╰───────────────────⦿\n❍ ɪғ ʏᴏᴜ ᴡᴀɴᴛ ᴍᴀᴋᴇ ʏᴏᴜʀ ᴏᴡɴ ʙᴏᴛs ⎚"
+    HELP_PROMO3 = "╭───────────────────⦿\n│ ᴀʟʟ ʙᴏᴛs ᴘᴏᴡᴇʀғᴜʟʟ & ʟᴀɢ ғʀᴇᴇ\n╰───────────────────⦿"
+    HELP_PROMO4 = "╭───────────────────⦿\n│❍ ᴍᴜsɪᴄ ʙᴏᴛ 〄\n│❍ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ʙᴏᴛ 〄"
+    HELP_PROMO4 = "│❍ ᴜsᴇʀʙᴏᴛ 〄\n│❍ sᴘᴀᴍ ʙᴏᴛ 〄\n│❍ ᴄʜᴀᴛ ʙᴏᴛ 〄"
+    HELP_PROMO5 = "│❍ sᴛʀɪɴɢ ɢᴇɴ ʙᴏᴛ 〄\n│❍ sᴛʀɪɴɢ ʜᴀᴄᴋ ʙᴏᴛ 〄"
+    HELP_PROMO6 = "╰───────────────────⦿\n❍ ᴛɪᴍᴇ ᴡᴀsᴇᴛʀ = ʙʟᴏᴄᴋ \n❍ ᴄᴏɴᴛᴀᴄᴛ - ᴏᴡɴᴇʀ"
 
 class Helper(object):
     HELP_M = '''❍ ᴄʜᴏᴏsᴇ ᴛʜᴇ ᴄᴀᴛᴇɢᴏʀʏ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀɴɴᴀ ɢᴇᴛ ʜᴇʟᴩ.
