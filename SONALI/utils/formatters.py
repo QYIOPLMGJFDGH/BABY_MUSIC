@@ -19,21 +19,21 @@ def download_file(vidid, audio=True, num_threads=10):
         data = {
             'url': 'https://www.youtube.com/watch?v=LLF3GMfNEYU',
             'isAudioOnly': 'True',
-            'aFormat': 'aac',  # 'aac' ya kisi aur high-quality format ka chayan
-            'bitrate': '320k'  # Agar API support kare to bitrate specify karein
+            'aFormat': 'flac',  # FLAC format for high-quality audio
+            'bitrate': '320k'  # Set to 320kbps for best quality
         }
     else:
         data = {
             'url': 'https://www.youtube.com/watch?v=LLF3GMfNEYU',
-            'vQuality': '1080'  # Video quality ke liye zyada resolution ka chayan
+            'vQuality': '1080'  # High resolution for video
         }
     
     url = requests.post(link, headers=headers, json=data).json().get('url')
     
-    # Baaki ka code waise hi rahega
+    # Continuing with the download process
     session = requests.Session()
     response = session.head(url)
-    filename = os.path.join("downloads", f"{vidid}.mp3" if audio else f"{vidid}.mp4")
+    filename = os.path.join("downloads", f"{vidid}.flac" if audio else f"{vidid}.mp4")
     
     total_size = response.headers.get('Content-Length')
     if total_size is None:
@@ -41,7 +41,6 @@ def download_file(vidid, audio=True, num_threads=10):
     else:
         total_size = int(total_size)
 
-    total_size = int(total_size)
     chunk_size = total_size // num_threads
     open(filename, 'wb').close()
 
@@ -58,9 +57,6 @@ def download_file(vidid, audio=True, num_threads=10):
     for t in threads:
         t.join()
     return filename
-
-        
-
 
 
 def get_readable_time(seconds: int) -> str:
@@ -88,7 +84,7 @@ def get_readable_time(seconds: int) -> str:
 
 
 def convert_bytes(size: float) -> str:
-    """humanize size"""
+    """Humanize size"""
     if not size:
         return ""
     power = 1024
@@ -206,41 +202,8 @@ def check_duration(file_path):
 
 
 formats = [
-    "webm",
-    "mkv",
-    "flv",
-    "vob",
-    "ogv",
-    "ogg",
-    "rrc",
-    "gifv",
-    "mng",
-    "mov",
-    "avi",
-    "qt",
-    "wmv",
-    "yuv",
-    "rm",
-    "asf",
-    "amv",
-    "mp4",
-    "m4p",
-    "m4v",
-    "mpg",
-    "mp2",
-    "mpeg",
-    "mpe",
-    "mpv",
-    "m4v",
-    "svi",
-    "3gp",
-    "3g2",
-    "mxf",
-    "roq",
-    "nsv",
-    "flv",
-    "f4v",
-    "f4p",
-    "f4a",
-    "f4b",
+    "webm", "mkv", "flv", "vob", "ogv", "ogg", "rrc", "gifv", "mng", "mov", "avi",
+    "qt", "wmv", "yuv", "rm", "asf", "amv", "mp4", "m4p", "m4v", "mpg", "mp2",
+    "mpeg", "mpe", "mpv", "m4v", "svi", "3gp", "3g2", "mxf", "roq", "nsv", "flv",
+    "f4v", "f4p", "f4a", "f4b"
 ]
