@@ -47,10 +47,10 @@ def track_markup(_, videoid, user_id, channel, fplay):
         ],
         [
             InlineKeyboardButton(
-                text="• ❍ᴡɴᴇꝛ •", url="https://t.me/uttam470",
+                text="˹ ᴜᴘᴅᴀᴛҽ ˼", url="https://t.me/BABY09_WORLD",
             ),
             InlineKeyboardButton(
-                text="• 𝛅ᴜᴘᴘᴏꝛᴛ •", url="https://t.me/+OL6jdTL7JAJjYzVl",
+                text="˹ 𝛅ᴜᴘᴘᴏꝛᴛ ˼", url="https://t.me/+OL6jdTL7JAJjYzVl",
             )
         ],
         [
