@@ -137,15 +137,21 @@ async def mb_plugin_button(client, CallbackQuery):
 @app.on_callback_query(filters.regex("promotext") & ~BANNED_USERS)
 async def promo_callback(client, CallbackQuery):
     try:
-        await CallbackQuery.answer(PROMO.HELP_PROMO, show_alert=True)
-        await CallbackQuery.answer(PROMO.HELP_PROMO1, show_alert=True)
-        await CallbackQuery.answer(PROMO.HELP_PROMO2, show_alert=True)
-        await CallbackQuery.answer(PROMO.HELP_PROMO3, show_alert=True)
-        await CallbackQuery.answer(PROMO.HELP_PROMO4, show_alert=True)
-        await CallbackQuery.answer(PROMO.HELP_PROMO5, show_alert=True)
-        await CallbackQuery.answer(PROMO.HELP_PROMO6, show_alert=True)
+        # Saare messages ko ek string me combine karen
+        full_promo_text = (
+            PROMO.HELP_PROMO + "\n" +
+            PROMO.HELP_PROMO1 + "\n" +
+            PROMO.HELP_PROMO2 + "\n" +
+            PROMO.HELP_PROMO3 + "\n" +
+            PROMO.HELP_PROMO4 + "\n" +
+            PROMO.HELP_PROMO5 + "\n" +
+            PROMO.HELP_PROMO6
+        )
+        # Saara text ek sath show karne ke liye
+        await CallbackQuery.answer(full_promo_text, show_alert=True)
     except Exception as e:
         print(f"Error: {e}")
+
 
 @app.on_callback_query(filters.regex('dplus'))      
 async def mb_plugin_button(client, CallbackQuery):
