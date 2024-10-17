@@ -131,33 +131,44 @@ async def get_thumb(videoid):
                 await f.close()
                 youtube = Image.open(f"cache/thumb{videoid}.png")
     
-    # Process the image
+    # Resize the image
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
 
-    # Instead of blur, add a colored stripe (patti)
+    # Blur the entire background
+    blurred_background = image2.filter(ImageFilter.BoxBlur(20))
+
+    # Enhance brightness if needed
+    enhancer = ImageEnhance.Brightness(blurred_background)
+    blurred_background = enhancer.enhance(0.6)
+
+    # Now we add the colored stripe around the blurred background
     border_width = 20  # Width of the colorful stripe
     stripe_color = "#FF5733"  # Example: A vibrant orange color
     
-    # Add the colored stripe to the border of the image
-    colored_border = ImageOps.expand(image2, border=border_width, fill=stripe_color)
+    # Add the colored stripe around the image
+    colored_border = ImageOps.expand(blurred_background, border=border_width, fill=stripe_color)
 
-    # Continue with the rest of the processing
     draw = ImageDraw.Draw(colored_border)
     arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
+    # Keep the triangle thumbnail sharp and paste it after background blur
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
+
+    # Position of the sharp triangle thumbnail
     circle_position = (120, 160)
     colored_border.paste(circle_thumbnail, circle_position, circle_thumbnail)
 
+    # Add the text and other elements on top of the blurred background
     text_x_position = 565
     title1 = truncate(title)
     draw.text((text_x_position, 180), title1[0], fill=(255, 255, 255), font=title_font)
     draw.text((text_x_position, 230), title1[1], fill=(255, 255, 255), font=title_font)
     draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
 
+    # Line under the title
     line_length = 580  
     red_length = int(line_length * 0.6)
     white_length = line_length - red_length
@@ -174,6 +185,7 @@ async def get_thumb(videoid):
     circle_position = (end_point_red[0], end_point_red[1])
     draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
                   circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill="#4CBB17")
+    
     draw.text((text_x_position, 400), "00:00", (255, 255, 255), font=arial)
     draw.text((1080, 400), duration, (255, 255, 255), font=arial)
 
