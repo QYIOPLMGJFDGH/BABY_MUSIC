@@ -1,0 +1,8 @@
+{
+    "123456:ABCDEF": {
+        "webhook_url": "https://yourdomain.com/123456:ABCDEF/webhook"
+    },
+    "7891011:GHIJKL": {
+        "webhook_url": "https://yourdomain.com/7891011:GHIJKL/webhook"
+    }
+}
