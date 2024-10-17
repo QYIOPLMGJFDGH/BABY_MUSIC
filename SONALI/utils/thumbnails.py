@@ -5,6 +5,58 @@ import aiohttp
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from youtubesearchpython.__future__ import VideosSearch
 
+def changeImageSize(maxWidth, maxHeight, image):
+    widthRatio = maxWidth / image.size[0]
+    heightRatio = maxHeight / image.size[1]
+    newWidth = int(widthRatio * image.size[0])
+    newHeight = int(heightRatio * image.size[1])
+    newImage = image.resize((newWidth, newHeight))
+    return newImage
+
+def truncate(text):
+    words = text.split(" ")
+    text1 = ""
+    text2 = ""    
+    for word in words:
+        if len(text1) + len(word) < 30:        
+            text1 += " " + word
+        elif len(text2) + len(word) < 30:       
+            text2 += " " + word
+
+    return [text1.strip(), text2.strip()]
+
+def crop_center_triangle(img, output_size, border, crop_scale=1.5):
+    half_the_width = img.size[0] / 2
+    half_the_height = img.size[1] / 2
+    larger_size = int(output_size * crop_scale)
+    
+    img = img.crop(
+        (
+            half_the_width - larger_size / 2,
+            half_the_height - larger_size / 2,
+            half_the_width + larger_size / 2,
+            half_the_height + larger_size / 2
+        )
+    )
+    
+    img = img.resize((output_size - 2 * border, output_size - 2 * border))
+    
+    final_img = Image.new("RGBA", (output_size, output_size), (0, 0, 0, 0))
+    
+    mask_main = Image.new("L", (output_size - 2 * border, output_size - 2 * border), 0)
+    draw_main = ImageDraw.Draw(mask_main)
+    
+    triangle_points = [
+        ((output_size - 2 * border) // 2, 0),  
+        (0, output_size - 2 * border),  
+        (output_size - 2 * border, output_size - 2 * border)
+    ]
+    draw_main.polygon(triangle_points, fill=255)
+
+    final_img.paste(img, (border, border), mask_main)
+    
+    return final_img
+
 async def get_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}_v4.png"):
         return f"cache/{videoid}_v4.png"
@@ -12,60 +64,71 @@ async def get_thumb(videoid):
     url = f"https://www.youtube.com/watch?v={videoid}"
     results = VideosSearch(url, limit=1)
     for result in (await results.next())["result"]:
-        title = re.sub("\W+", " ", result.get("title", "Unsupported Title")).title()
+        try:
+            title = re.sub("\W+", " ", result.get("title", "Unsupported Title")).title()
+        except:
+            title = "Unsupported Title"
         duration = result.get("duration", "Unknown Mins")
         thumbnail = result["thumbnails"][0]["url"].split("?")[0]
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
-    # Download thumbnail
     async with aiohttp.ClientSession() as session:
         async with session.get(thumbnail) as resp:
             if resp.status == 200:
-                async with aiofiles.open(f"cache/thumb{videoid}.png", mode="wb") as f:
-                    await f.write(await resp.read())
+                f = await aiofiles.open(f"cache/thumb{videoid}.png", mode="wb")
+                await f.write(await resp.read())
+                await f.close()
                 youtube = Image.open(f"cache/thumb{videoid}.png")
-
-    # Process the image
-    background = ImageEnhance.Brightness(
-        youtube.convert("RGBA").filter(ImageFilter.BoxBlur(20))
-    ).enhance(0.6)
+    
+    image1 = changeImageSize(1280, 720, youtube)
+    image2 = image1.convert("RGBA")
+    background = image2.filter(filter=ImageFilter.BoxBlur(20))
+    enhancer = ImageEnhance.Brightness(background)
+    background = enhancer.enhance(0.6)
     
     draw = ImageDraw.Draw(background)
-    title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
     arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
+    title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
-    # Circular cropped thumbnail
-    def crop_center_circle(img, size):
-        mask = Image.new("L", (size, size), 0)
-        draw_mask = ImageDraw.Draw(mask)
-        draw_mask.ellipse((0, 0, size, size), fill=255)
-        img = img.resize((size, size))
-        result = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-        result.paste(img, (0, 0), mask)
-        return result
+    circle_thumbnail = crop_center_triangle(youtube, 400, 20)
+    circle_thumbnail = circle_thumbnail.resize((400, 400))
+    circle_position = (120, 160)
+    background.paste(circle_thumbnail, circle_position, circle_thumbnail)
 
-    circle_thumbnail = crop_center_circle(youtube, 400)
-    background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
+    text_x_position = 565
+    title1 = truncate(title)
+    draw.text((text_x_position, 180), title1[0], fill=(255, 255, 255), font=title_font)
+    draw.text((text_x_position, 230), title1[1], fill=(255, 255, 255), font=title_font)
+    draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
 
-    # Text and line
-    title_lines = [line.strip() for line in re.findall(r'.{1,30}(?:\s+|$)', title)]
-    draw.text((565, 180), title_lines[0], fill="white", font=title_font)
-    if len(title_lines) > 1:
-        draw.text((565, 230), title_lines[1], fill="white", font=title_font)
-    draw.text((565, 320), f"{channel}  |  {views}", fill="white", font=arial)
+    line_length = 580  
+    red_length = int(line_length * 0.6)
+    white_length = line_length - red_length
 
-    # Line and play icons
-    draw.line([(565, 380), (905, 380)], fill="#4CBB17", width=9)
-    draw.line([(905, 380), (1145, 380)], fill="white", width=8)
-    draw.ellipse([(905 - 10, 370), (905 + 10, 390)], fill="#4CBB17")
-    draw.text((565, 400), "00:00", fill="white", font=arial)
-    draw.text((1080, 400), duration, fill="white", font=arial)
+    start_point_red = (text_x_position, 380)
+    end_point_red = (text_x_position + red_length, 380)
+    draw.line([start_point_red, end_point_red], fill="#4CBB17", width=9)
 
-    play_icons = Image.open("SONALI/assets/assets/BABYMUSICPNG.png").resize((620, 150))
-    background.paste(play_icons, (565, 455), play_icons)
+    start_point_white = (text_x_position + red_length, 380)
+    end_point_white = (text_x_position + line_length, 380)
+    draw.line([start_point_white, end_point_white], fill="white", width=8)
 
-    # Clean up and save
-    os.remove(f"cache/thumb{videoid}.png")
+    circle_radius = 10 
+    circle_position = (end_point_red[0], end_point_red[1])
+    draw.ellipse([circle_position[0] - circle_radius, circle_position[1] - circle_radius,
+                  circle_position[0] + circle_radius, circle_position[1] + circle_radius], fill="#4CBB17")
+    draw.text((text_x_position, 400), "00:00", (255, 255, 255), font=arial)
+    draw.text((1080, 400), duration, (255, 255, 255), font=arial)
+
+    play_icons = Image.open("SONALI/assets/assets/BABYMUSICPNG.png")
+    play_icons = play_icons.resize((620, 150))
+    background.paste(play_icons, (text_x_position, 455), play_icons)
+
+    try:
+        os.remove(f"cache/thumb{videoid}.png")
+    except:
+        pass
+    
     background.save(f"cache/{videoid}_v4.png")
     return f"cache/{videoid}_v4.png"
