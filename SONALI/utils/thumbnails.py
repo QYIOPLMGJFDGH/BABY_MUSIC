@@ -2,8 +2,11 @@ import os
 import re
 import aiofiles
 import aiohttp
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont, ImageOps
+from unidecode import unidecode
 from youtubesearchpython.__future__ import VideosSearch
+from SONALI import app
+from config import YOUTUBE_IMG_URL
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
@@ -14,22 +17,34 @@ def changeImageSize(maxWidth, maxHeight, image):
     return newImage
 
 def truncate(text):
-    words = text.split(" ")
+    list = text.split(" ")
     text1 = ""
     text2 = ""    
-    for word in words:
-        if len(text1) + len(word) < 30:        
-            text1 += " " + word
-        elif len(text2) + len(word) < 30:       
-            text2 += " " + word
+    for i in list:
+        if len(text1) + len(i) < 30:        
+            text1 += " " + i
+        elif len(text2) + len(i) < 30:       
+            text2 += " " + i
 
-    return [text1.strip(), text2.strip()]
+    text1 = text1.strip()
+    text2 = text2.strip()     
+    return [text1,text2]
+
+from PIL import Image, ImageDraw, ImageOps
+
+import random
+from PIL import Image, ImageDraw, ImageFilter
+
+from PIL import Image, ImageDraw
+
+from PIL import Image, ImageDraw
 
 def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
     half_the_height = img.size[1] / 2
     larger_size = int(output_size * crop_scale)
     
+    # Crop the image
     img = img.crop(
         (
             half_the_width - larger_size / 2,
@@ -39,23 +54,38 @@ def crop_center_triangle(img, output_size, border, crop_scale=1.5):
         )
     )
     
+    # Resize the image to fit inside the final image size
     img = img.resize((output_size - 2 * border, output_size - 2 * border))
     
+    # Create a transparent final image
     final_img = Image.new("RGBA", (output_size, output_size), (0, 0, 0, 0))
     
+    # Create a mask for the triangle
     mask_main = Image.new("L", (output_size - 2 * border, output_size - 2 * border), 0)
     draw_main = ImageDraw.Draw(mask_main)
     
+    # Coordinates for the main triangle (centered in the image)
     triangle_points = [
-        ((output_size - 2 * border) // 2, 0),  
-        (0, output_size - 2 * border),  
-        (output_size - 2 * border, output_size - 2 * border)
+        ((output_size - 2 * border) // 2, 0),  # Top center
+        (0, output_size - 2 * border),  # Bottom left
+        (output_size - 2 * border, output_size - 2 * border)  # Bottom right
     ]
     draw_main.polygon(triangle_points, fill=255)
 
-    final_img.paste(img, (border, border), mask_main)
+    # Combine the triangle mask without any scratch effects
+    mask_combined = mask_main
+    
+    # Paste the cropped image into the triangle mask
+    final_img.paste(img, (border, border), mask_combined)
     
     return final_img
+
+
+from PIL import ImageDraw, ImageFont, ImageEnhance, ImageFilter
+import os
+import re
+import aiohttp
+import aiofiles
 
 async def get_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}_v4.png"):
@@ -65,13 +95,24 @@ async def get_thumb(videoid):
     results = VideosSearch(url, limit=1)
     for result in (await results.next())["result"]:
         try:
-            title = re.sub("\W+", " ", result.get("title", "Unsupported Title")).title()
+            title = result["title"]
+            title = re.sub("\W+", " ", title)
+            title = title.title()
         except:
             title = "Unsupported Title"
-        duration = result.get("duration", "Unknown Mins")
+        try:
+            duration = result["duration"]
+        except:
+            duration = "Unknown Mins"
         thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-        views = result.get("viewCount", {}).get("short", "Unknown Views")
-        channel = result.get("channel", {}).get("name", "Unknown Channel")
+        try:
+            views = result["viewCount"]["short"]
+        except:
+            views = "Unknown Views"
+        try:
+            channel = result["channel"]["name"]
+        except:
+            channel = "Unknown Channel"
 
     async with aiohttp.ClientSession() as session:
         async with session.get(thumbnail) as resp:
@@ -81,16 +122,21 @@ async def get_thumb(videoid):
                 await f.close()
                 youtube = Image.open(f"cache/thumb{videoid}.png")
     
+    # Process the image
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
     background = image2.filter(filter=ImageFilter.BoxBlur(20))
     enhancer = ImageEnhance.Brightness(background)
-    background = enhancer.enhance(0.6)
+    background = enhancer.enhance(0.9)
     
     draw = ImageDraw.Draw(background)
     arial = ImageFont.truetype("SONALI/assets/assets/font2.ttf", 30)
+    font = ImageFont.truetype("SONALI/assets/assets/font.ttf", 30)
     title_font = ImageFont.truetype("SONALI/assets/assets/font3.ttf", 45)
 
+    # Green border removed
+
+    # Continue with the rest of your processing
     circle_thumbnail = crop_center_triangle(youtube, 400, 20)
     circle_thumbnail = circle_thumbnail.resize((400, 400))
     circle_position = (120, 160)
