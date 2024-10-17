@@ -10,7 +10,7 @@ from config import BANNED_USERS, START_IMG_URL, SUPPORT_CHAT
 from strings import get_string, helpers
 from SONALI.utils.stuffs.buttons import BUTTONS
 from SONALI.utils.stuffs.helper import Helper
-
+from SONALI.utils.stuffs.helper import HELP_PROMO
 @app.on_message(filters.command(["help"]) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(filters.regex("settings_back_helper") & ~BANNED_USERS)
 async def helper_private(
@@ -133,6 +133,13 @@ async def mb_plugin_button(client, CallbackQuery):
         await CallbackQuery.edit_message_text(f"`something errors`",reply_markup=keyboard,parse_mode=enums.ParseMode.MARKDOWN)
     else:
         await CallbackQuery.edit_message_text(getattr(Helper, cb), reply_markup=keyboard)
+
+@app.on_callback_query(filters.regex("promotext") & ~BANNED_USERS)
+async def promo_callback(client, CallbackQuery):
+    try:
+        await CallbackQuery.answer(HELP_PROMO, show_alert=True)
+    except Exception as e:
+        print(f"Error: {e}")
 
 @app.on_callback_query(filters.regex('dplus'))      
 async def mb_plugin_button(client, CallbackQuery):
