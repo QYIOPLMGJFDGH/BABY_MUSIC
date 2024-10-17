@@ -1,4 +1,4 @@
-import telebot
+from telebot import TeleBot
 
 # Pehla bot (original bot) ka token
 MAIN_BOT_TOKEN = "7638229482:AAEFl9_9Vmrl9MDDmsA6uipDH1Hc6HcjGHc"
