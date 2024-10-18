@@ -130,7 +130,21 @@ async def get_thumb(videoid):
                 await f.write(await resp.read())
                 await f.close()
                 youtube = Image.open(f"cache/thumb{videoid}.png")
-    
+    # Mapping for "small caps" or similar styled Unicode letters
+small_caps = {
+    'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
+    'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 's', 't': 'ᴛ',
+    'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
+}
+
+def to_small_caps(text):
+    return ''.join([small_caps.get(c.lower(), c) for c in text])
+
+# Example usage:
+title1 = truncate(title)
+title1[0] = to_small_caps(title1[0])
+title1[1] = to_small_caps(title1[1])
+
     # Process the image
     image1 = changeImageSize(1280, 720, youtube)
     image2 = image1.convert("RGBA")
@@ -151,9 +165,9 @@ async def get_thumb(videoid):
 
     text_x_position = 565
     title1 = truncate(title)
-    draw.text((text_x_position, 180), title1[0], fill=(255, 255, 255), font=title_font)
-    draw.text((text_x_position, 230), title1[1], fill=(255, 255, 255), font=title_font)
-    draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (255, 255, 255), font=arial)
+    draw.text((text_x_position, 180), title1[0], fill=(255, 0, 0), font=title_font)
+    draw.text((text_x_position, 230), title1[1], fill=(255, 0, 0), font=title_font)
+    draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (0, 0, 0), font=arial)
 
     line_length = 580  
     red_length = int(line_length * 0.6)
