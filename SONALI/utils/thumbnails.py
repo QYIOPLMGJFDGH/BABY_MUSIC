@@ -28,16 +28,7 @@ def truncate(text):
 
     text1 = text1.strip()
     text2 = text2.strip()     
-    return [text1,text2]
-
-from PIL import Image, ImageDraw, ImageOps
-
-import random
-from PIL import Image, ImageDraw, ImageFilter
-
-from PIL import Image, ImageDraw
-
-from PIL import Image, ImageDraw
+    return [text1, text2]
 
 def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     half_the_width = img.size[0] / 2
@@ -89,12 +80,15 @@ def crop_center_triangle(img, output_size, border, crop_scale=1.5):
     
     return final_img
 
+# Mapping for "small caps" or similar styled Unicode letters
+small_caps = {
+    'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
+    'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 's', 't': 'ᴛ',
+    'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
+}
 
-from PIL import ImageDraw, ImageFont, ImageEnhance, ImageFilter
-import os
-import re
-import aiohttp
-import aiofiles
+def to_small_caps(text):
+    return ''.join([small_caps.get(c.lower(), c) for c in text])
 
 async def get_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}_v4.png"):
@@ -130,20 +124,11 @@ async def get_thumb(videoid):
                 await f.write(await resp.read())
                 await f.close()
                 youtube = Image.open(f"cache/thumb{videoid}.png")
-    # Mapping for "small caps" or similar styled Unicode letters
-small_caps = {
-    'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ',
-    'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 's', 't': 'ᴛ',
-    'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
-}
 
-def to_small_caps(text):
-    return ''.join([small_caps.get(c.lower(), c) for c in text])
-
-# Example usage:
-title1 = truncate(title)
-title1[0] = to_small_caps(title1[0])
-title1[1] = to_small_caps(title1[1])
+    # Example usage:
+    title1 = truncate(title)
+    title1[0] = to_small_caps(title1[0])
+    title1[1] = to_small_caps(title1[1])
 
     # Process the image
     image1 = changeImageSize(1280, 720, youtube)
