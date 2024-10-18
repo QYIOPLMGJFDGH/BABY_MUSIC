@@ -6,7 +6,6 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from SONALI import YouTube, app
 from SONALI.core.call import RAUSHAN
 from SONALI.misc import SUDOERS, db
-from .config import VOTE_THRESHOLD
 from SONALI.utils.database import (
     get_active_chats,
     get_lang,
@@ -28,6 +27,7 @@ from SONALI.utils.inline import (
 )
 from SONALI.utils.stream.autoclear import auto_clean
 from SONALI.utils.thumbnails import get_thumb
+from .config import VOTE_THRESHOLD
 from config import (
     BANNED_USERS,
     SOUNCLOUD_IMG_URL,
@@ -36,8 +36,7 @@ from config import (
     TELEGRAM_VIDEO_URL,
     adminlist,
     confirmer,
-    votemode,
-    VOTE_THRESHOLD  # New threshold import
+    votemode # New threshold import
 )
 from strings import get_string
 
