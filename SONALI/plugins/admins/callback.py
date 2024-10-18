@@ -6,6 +6,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from SONALI import YouTube, app
 from SONALI.core.call import RAUSHAN
 from SONALI.misc import SUDOERS, db
+from .config import VOTE_THRESHOLD
 from SONALI.utils.database import (
     get_active_chats,
     get_lang,
