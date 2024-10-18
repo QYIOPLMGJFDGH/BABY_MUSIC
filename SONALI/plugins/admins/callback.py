@@ -27,7 +27,6 @@ from SONALI.utils.inline import (
 )
 from SONALI.utils.stream.autoclear import auto_clean
 from SONALI.utils.thumbnails import get_thumb
-from .config import VOTE_THRESHOLD
 from config import (
     BANNED_USERS,
     SOUNCLOUD_IMG_URL,
@@ -42,6 +41,8 @@ from strings import get_string
 
 checker = {}
 upvoters = {}
+
+VOTE_THRESHOLD = int(getenv("VOTE_THRESHOLD", 5))  # Default threshold is 5 votes
 
 @app.on_callback_query(filters.regex("ADMIN") & ~BANNED_USERS)
 @languageCB
