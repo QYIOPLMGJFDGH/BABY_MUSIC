@@ -123,3 +123,7 @@ if SUPPORT_CHAT:
         raise SystemExit(
             "[ERROR] - Your SUPPORT_CHAT url is wrong. Please ensure that it starts with https://"
         )
+
+
+# Introducing upvote threshold value
+VOTE_THRESHOLD = int(getenv("VOTE_THRESHOLD", 5))  # Default threshold is 5 votes
