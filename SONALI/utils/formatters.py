@@ -20,7 +20,8 @@ def download_file(vidid, audio=True, num_threads=10):
             'url': 'https://www.youtube.com/watch?v=LLF3GMfNEYU',
             'isAudioOnly': 'True',
             'aFormat': 'flac',  # FLAC format for high-quality audio
-            'bitrate': '320k'  # Set to 320kbps for best quality
+            'bitrate': '320k',  # Set to 320kbps for best quality
+            'buffer_size': '64k'
         }
     else:
         data = {
