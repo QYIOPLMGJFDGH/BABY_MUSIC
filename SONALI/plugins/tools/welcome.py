@@ -90,7 +90,7 @@ async def greet_new_member(_, member: ChatMemberUpdated):
     
     try:
         # Welcome message
-        welcome_message = f"**👋 {user.first_name}, Wᴇʟᴄᴏᴍᴇ Tᴏ {member.chat.title}!\n\n" \
+        welcome_message = f"**👋 {user.mention}, Wᴇʟᴄᴏᴍᴇ Tᴏ {member.chat.title}!\n\n" \
                           "• I Hᴏᴘᴇ Yᴏᴜ Aʀᴇ Fɪɴᴇ!\n\n" \
                           "• Pʟᴇᴀsᴇ Aʟᴡᴀʏs Fᴏʟʟᴏᴡ Tʜᴇ Gʀᴏᴜᴘ Rᴜʟᴇs!\n" \
                           "────────────────────\n" \
