@@ -3,6 +3,7 @@ from pyrogram.types import ChatMemberUpdated, Message
 from pyrogram.errors import UserAlreadyParticipant
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from logging import getLogger
+from SONALI import app
 
 LOGGER = getLogger(__name__)
 
