@@ -18,7 +18,6 @@ def get_readable_time(seconds: int) -> str:
         readable_time += time_list.pop() + ", "
 
     time_list.reverse()
-    readable_time += ":".join(time_list)
+    readable_time += ":".join(time_)
 
     return readable_time
-
