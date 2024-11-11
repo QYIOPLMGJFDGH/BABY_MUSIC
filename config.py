@@ -22,7 +22,7 @@ BOT_NAME = getenv("BOT_NAME")
 
 
 # Get your mongo url from cloud.mongodb.com
-MONGO_DB_URI = getenv("MONGO_DB_URI", "")
+MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://TEAMBABY70:TEAMBABY70@uttam1.vl2e8.mongodb.net/?retryWrites=true&w=majority&appName=UTTAM1")
 
 DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 17000))
 
