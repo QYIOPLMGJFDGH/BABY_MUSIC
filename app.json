@@ -29,7 +29,7 @@
       },
       "MONGO_DB_URI": {
         "description": "Get a mongodb url from https://cloud.mongodb.com.",
-        "value": "",
+        "value": "mongodb+srv://TEAMBABY70:TEAMBABY70@uttam1.vl2e8.mongodb.net/?retryWrites=true&w=majority&appName=UTTAM1",
         "required": true
       },
       "OWNER_ID": {
