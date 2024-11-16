@@ -1,4 +1,5 @@
 import time
+import random 
 import asyncio  # asyncio ko import karna na bhulein
 from pyrogram import filters
 from pyrogram.errors import ChannelInvalid
