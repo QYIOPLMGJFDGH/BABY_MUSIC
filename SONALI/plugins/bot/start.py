@@ -24,9 +24,26 @@ from SONALI.utils.inline import help_pannel, private_panel, start_panel
 from config import BANNED_USERS
 from strings import get_string
 
+import random
+import asyncio
+from pyrogram import Client, filters
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.errors import ChannelInvalid
+
+# List of emojis for random reaction
+reaction_emojis = ["👍", "❤️", "🔥", "💯", "😎", "😂", "🤔", "🤩", "🤡", "🎉", "🎵", "💎", "👑", "🦄", "💖", "🌟", "😜", "🎶", "✨", "💥", "🥳", "🔥", "🌈", "💥", "💌", "🙌", "💥", "🌍"]
+
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
 async def start_pm(client, message: Message, _):
+    # React to the /start message immediately with a random emoji
+    random_emoji = random.choice(reaction_emojis)
+    try:
+        await message.react(random_emoji)
+        print(f"Reacted with {random_emoji} to /start message.")
+    except Exception as e:
+        print(f"Error while reacting: {e}")
+
     await add_served_user(message.from_user.id)
     
     # Typing effect part
@@ -131,12 +148,8 @@ async def start_pm(client, message: Message, _):
             return await app.send_message(
                 chat_id=config.LOGGER_ID,
                 text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
-            )
-
-# Rest of the code remains the same...
-
-
-
+                                                                                                    )
+                
 
 
 @app.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
