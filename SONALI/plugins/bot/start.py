@@ -24,11 +24,6 @@ from SONALI.utils.inline import help_pannel, private_panel, start_panel
 from config import BANNED_USERS
 from strings import get_string
 
-import random
-import asyncio
-from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.errors import ChannelInvalid
 
 # List of emojis for random reaction
 reaction_emojis = ["👍", "❤️", "🔥", "💯", "😎", "😂", "🤔", "🤩", "🤡", "🎉", "🎵", "💎", "👑", "🦄", "💖", "🌟", "😜", "🎶", "✨", "💥", "🥳", "🔥", "🌈", "💥", "💌", "🙌", "💥", "🌍"]
