@@ -50,7 +50,7 @@ def track_markup(_, videoid, user_id, channel, fplay):
             )
         ],
         [
-            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="𝛓ʟᴏsᴇ"),
+            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close"),
         ]
     ]
 
@@ -74,7 +74,7 @@ def stream_markup(_, videoid, chat_id):
             )
         ],
         [
-            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="𝛓ʟᴏsᴇ"),
+            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close"),
         ]
     ]
 
@@ -173,7 +173,7 @@ def queue_markup(_, videoid, chat_id):
             )
         ],
         [
-            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="𝛓ʟᴏsᴇ"),
+            InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close"),
         ]
     ]
     return buttons
