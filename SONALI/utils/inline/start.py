@@ -29,6 +29,7 @@ def private_panel(_):
         ],
         [
             InlineKeyboardButton(text=_["S_B_6"], callback_data=f"abot_cb"),
+            InlineKeyboardButton(text=_["S_B_99"], url="https://github.com/BABY-MUSIC_SPOTIFY_MUSIC"),
         ],
     ]
     return buttons
