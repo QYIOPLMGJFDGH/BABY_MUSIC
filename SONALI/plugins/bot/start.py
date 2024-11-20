@@ -46,12 +46,12 @@ async def start_pm(client, message: Message, _):
     typing_message = await message.reply("💗💗💗")  # Initial message
     
     # Simulate typing
-    typing_text = "𝗧𝗛𝗔𝗡𝗞𝗦 𝗙𝗢𝗥 𝗦𝗧𝗔𝗥𝗧𝗜𝗡𝗚"
+    typing_text = "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात् ॥"
     
     for i in range(1, len(typing_text) + 1):  # Loop through each character
         try:
             await typing_message.edit_text(typing_text[:i])
-            await asyncio.sleep(0.001)  # Add delay to simulate typing
+            await asyncio.sleep(0.0005)  # Add delay to simulate typing
         except Exception as e:
             print(f"Error while editing message: {e}")  # Print error if occurs
 
