@@ -41,6 +41,7 @@ async def start_pm(client, message: Message, _):
         print(f"Error while reacting: {e}")
 
     await add_served_user(message.from_user.id)
+    await message.react("💖")
     
     # Typing effect part
     typing_message = await message.reply("💗💗💗")  # Initial message
