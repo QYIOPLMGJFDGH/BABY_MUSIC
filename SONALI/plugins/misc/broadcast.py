@@ -72,7 +72,7 @@ async def list_subscribers(client, message):
 
         try:
             user = await app.get_users(user_id)
-            user_name = user.first_name if user.first_name else "Unknown"
+            user_name = user.mention if user.mention else "Unknown"  # नाम को मेंशन करें
         except:
             user_name = "Unknown"
 
@@ -83,7 +83,8 @@ async def list_subscribers(client, message):
             f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
         )
 
-    await message.reply(text)
+    await message.reply(text, disable_web_page_preview=True)
+
 
 
 @app.on_message(filters.command("add"))
