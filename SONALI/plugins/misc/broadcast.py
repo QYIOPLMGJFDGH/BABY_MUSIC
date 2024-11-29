@@ -144,11 +144,12 @@ async def my_stats(client, message):
     hours, remainder = divmod(remaining_time.seconds, 3600)
     minutes, _ = divmod(remainder, 60)
 
+    # Get the user's name
     try:
-                user = await app.get_users(user_id)
-                user_name = user.mention if user.first_name else "Unknown"
-            except:
-                user_name = "Unknown"
+        user = await app.get_users(user_id)
+        user_name = user.mention if user.first_name else "Unknown"
+    except Exception:
+        user_name = "Unknown"
 
     # Convert times to IST
     added_on_ist = added_on.astimezone(india_tz).strftime('%Y-%m-%d %H:%M:%S')
@@ -164,6 +165,7 @@ async def my_stats(client, message):
         f"Tʜᴀɴᴋs {user_name} ☺️"
     )
 
+    # Inline button to check subscription status
     switch_button = InlineKeyboardButton(
         text="🔄 Check My Subscription",
         switch_inline_query=f"subscription_status_{user_id}"  # This will be used for inline query
@@ -174,6 +176,7 @@ async def my_stats(client, message):
 
     # Send the message with the button
     await message.reply(text, reply_markup=reply_markup, disable_web_page_preview=True)
+
 
     
 
