@@ -71,21 +71,34 @@ async def list_subscribers(client, message):
     for sub in all_subscribers:
         try:
             user_id = sub["user_id"]
-            expiry_date = datetime.strptime(sub["expiry_date"], "%Y-%m-%d %H:%M:%S")
-            added_on = datetime.strptime(sub["added_on"], "%Y-%m-%d %H:%M:%S")
+            
+            # अगर expiry_date पहले से datetime है, तो इसे स्ट्रिंग में कनवर्ट करें
+            if isinstance(sub["expiry_date"], datetime):
+                expiry_date = sub["expiry_date"]
+            else:
+                expiry_date = datetime.strptime(sub["expiry_date"], "%Y-%m-%d %H:%M:%S")
+            
+            # अगर added_on पहले से datetime है, तो इसे स्ट्रिंग में कनवर्ट करें
+            if isinstance(sub["added_on"], datetime):
+                added_on = sub["added_on"]
+            else:
+                added_on = datetime.strptime(sub["added_on"], "%Y-%m-%d %H:%M:%S")
+
             subscription_days = sub["subscription_days"]
 
-            # समय गणना
+            # Remaining time calculation
             remaining_time = expiry_date - datetime.now()
             days = remaining_time.days
             hours, remainder = divmod(remaining_time.seconds, 3600)
             minutes, _ = divmod(remainder, 60)
 
-            # यूजर का नाम प्राप्त करें
-            user = await app.get_users(user_id)
-            user_name = user.mention if user.first_name else "Unknown"
+            # Get user's name
+            try:
+                user = await app.get_users(user_id)
+                user_name = user.mention if user.first_name else "Unknown"
+            except:
+                user_name = "Unknown"
 
-            # विवरण तैयार करें
             text += (
                 f"**Name**: {user_name}\n"
                 f"**UserID**: `{user_id}`\n"
@@ -94,9 +107,10 @@ async def list_subscribers(client, message):
                 f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
             )
         except Exception as e:
-            text += f"Error while processing subscriber: {e}\n"
+            text += f"Error while processing subscriber {sub.get('user_id', 'Unknown')}: {e}\n\n"
 
     await message.reply(text, disable_web_page_preview=True)
+
 
 
 
