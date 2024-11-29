@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from pymongo import MongoClient
 from pyrogram import filters
 from pytz import timezone
-from SONALI.utils.stuffs.helper import Helper
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.enums import ChatMembersFilter
 from pyrogram.errors import FloodWait
@@ -131,7 +130,7 @@ async def my_stats(client, message):
     if not user_data:
         # InlineKeyboardMarkup और Button जोड़ें
         keyboard = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("ɪɴғᴏ", callback="SPM")]]
+            [[InlineKeyboardButton("ɪɴғᴏ", url="https://t.me/Goodbyenjbot?start=Subscription")]]
         )
 
         # संदेश के साथ बटन भेजें
