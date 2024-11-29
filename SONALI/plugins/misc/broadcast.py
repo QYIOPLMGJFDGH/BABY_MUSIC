@@ -67,7 +67,7 @@ async def list_subscribers(client, message):
 
     all_subscribers = list(subscribers.find())
     if not all_subscribers:
-        return await message.reply("कोई भी सब्सक्राइबर नहीं मिला।")
+        return await message.reply("Nᴏ sᴜʙsᴄʀɪʙᴇʀ ᴜsᴇʀ !")
 
     # India timezone setup
     india_tz = timezone("Asia/Kolkata")
