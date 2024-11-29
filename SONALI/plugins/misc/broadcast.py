@@ -18,7 +18,7 @@ from SONALI.utils.formatters import alpha_to_int
 from config import adminlist
 
 # MongoDB सेटअप
-client = MongoClient("mongodb+srv://Yash_607:Yash_607@cluster0.r3s9sbo.mongodb.net/?retryWrites=true&w=majority")  # MongoDB URI
+client = MongoClient("mongodb+srv://Yash_607:Yash_607@cluster0.r3s9sbo.mongodb.net/?retryWrites=true&w=majority")
 db = client["subscriberDB"]
 subscribers = db["subscribers"]
 
@@ -28,12 +28,12 @@ IS_BROADCASTING = False
 # Subscriber को जोड़ने का फंक्शन
 async def add_subscriber(user_id, days):
     expiry_date = datetime.now() + timedelta(days=days)
-    added_on = datetime.now()  # यूजर कब जोड़ा गया
+    added_on = datetime.now()
     subscribers.update_one(
         {"user_id": user_id},
         {
             "$set": {
-                "expiry_date": expiry_date,
+                "expiry_date": expiry_date.strftime("%Y-%m-%d %H:%M:%S"),
                 "added_on": added_on.strftime("%Y-%m-%d %H:%M:%S"),
                 "subscription_days": days,
                 "usage_count": 0
@@ -63,41 +63,39 @@ async def list_subscribers(client, message):
     if message.from_user.id != OWNER_ID:
         return await message.reply("यह कमांड केवल Owner उपयोग कर सकते हैं।")
 
-    # सभी सब्सक्राइबर्स की सूची लोड करें
     all_subscribers = list(subscribers.find())
     if not all_subscribers:
         return await message.reply("कोई भी सब्सक्राइबर नहीं मिला।")
 
     text = "### Subscriber List ###\n\n"
     for sub in all_subscribers:
-        user_id = sub["user_id"]
-        expiry_date = datetime.strptime(sub["expiry_date"], "%Y-%m-%d %H:%M:%S")
-        added_on = datetime.strptime(sub["added_on"], "%Y-%m-%d %H:%M:%S")
-        subscription_days = sub["subscription_days"]  # सब्सक्रिप्शन अवधि
-
-        # बाकी समय निकालें
-        remaining_time = expiry_date - datetime.now()
-        days = remaining_time.days
-        hours, remainder = divmod(remaining_time.seconds, 3600)
-        minutes, _ = divmod(remainder, 60)
-
-        # यूजर का नाम प्राप्त करें
         try:
+            user_id = sub["user_id"]
+            expiry_date = datetime.strptime(sub["expiry_date"], "%Y-%m-%d %H:%M:%S")
+            added_on = datetime.strptime(sub["added_on"], "%Y-%m-%d %H:%M:%S")
+            subscription_days = sub["subscription_days"]
+
+            # समय गणना
+            remaining_time = expiry_date - datetime.now()
+            days = remaining_time.days
+            hours, remainder = divmod(remaining_time.seconds, 3600)
+            minutes, _ = divmod(remainder, 60)
+
+            # यूजर का नाम प्राप्त करें
             user = await app.get_users(user_id)
             user_name = user.mention if user.first_name else "Unknown"
-        except:
-            user_name = "Unknown"
 
-        # विवरण तैयार करें
-        text += (
-            f"**Name**: {user_name}\n"
-            f"**UserID**: `{user_id}`\n"
-            f"**Added On**: `{added_on.strftime('%Y-%m-%d %H:%M:%S')}`\n"
-            f"**Subscription Days**: `{subscription_days}` days\n"
-            f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
-        )
+            # विवरण तैयार करें
+            text += (
+                f"**Name**: {user_name}\n"
+                f"**UserID**: `{user_id}`\n"
+                f"**Added On**: `{added_on.strftime('%Y-%m-%d %H:%M:%S')}`\n"
+                f"**Subscription Days**: `{subscription_days}` days\n"
+                f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
+            )
+        except Exception as e:
+            text += f"Error while processing subscriber: {e}\n"
 
-    # उत्तर भेजें
     await message.reply(text, disable_web_page_preview=True)
 
 
