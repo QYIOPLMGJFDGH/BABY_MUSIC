@@ -1,6 +1,23 @@
 class PROMO(object):
     HELP_PROMO = "ᴘʀᴏᴍᴏ+ʜᴇʀᴜᴋᴏ ᴄᴄ+ᴠᴘs+ᴄʜᴇᴀᴘ ᴍᴇᴍʙᴇʀ ᴄᴏɴᴛᴀᴄᴛ ᴏᴡɴᴇʀ ⎚"
 class Helper(object):
+    SPM = '''```
+⌬ ๏ Bᴇɴɪғɪᴛ ᴏғ sᴜʙsᴄʀɪᴘᴛɪᴏɴ```
+
+**⌬ Yᴏᴜ ᴄᴀɴ ғʀᴇᴇ ᴘʀᴏᴍᴏᴛɪᴏɴ ᴏғ [ʙᴀʙʏ-ᴍᴜsɪᴄ](https://t.me/BABY09_WORLD) Aʟʟ**
+
+```\nOɴʟʏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ ᴜsᴇʀ [ʙᴀsɪᴄ ᴄᴏᴍᴍᴀɴᴅ]```
+
+**⤿ Tᴏ ᴄʜᴇᴄᴋ ʏᴏᴜ sᴜʙsᴄʀɪᴘᴛɪᴏɴ sᴛᴀᴛᴜs - /mystats
+⤿ Tᴏ ᴘʀᴏᴍᴏᴛɪᴏɴ ʟɪᴋᴇ - [/broadcast -user -pin -pinloud -nobot -assistant]
+⤿ Yᴏᴜ ᴄᴀɴ ᴜsᴇ ᴀᴅᴠᴀɴᴄᴇ [ᴀɪ ᴛᴏᴏʟ](https://t.me/TB_AI_BOT)
+```\nOɴʟʏ Oᴡɴᴇʀ [ʙᴀsɪᴄ ᴄᴏᴍᴍᴀɴᴅ]```
+⤿ Tᴏ ᴀᴅᴅ sᴜʙsᴄʀɪᴘᴛɪᴏɴ ᴜsᴇʀ - [/add {user_id} days]
+⤿ To ʀᴇᴍᴏᴠᴇ sᴜʙsᴄʀɪᴘᴛɪᴏɴ ᴜsᴇʀ - [/rm {user_id}]
+⤿ Tᴏ ᴄʜᴇᴄᴋ ᴀʟʟ sᴜʙsᴄʀɪᴘᴛɪᴏɴ ʟɪsᴛ - [/sublist]
+⌬ 𝗗𝗠ᴏᴡɴᴇʀ 𝗙𝗢𝗥 𝗦𝗨𝗕𝗦𝗖𝗥𝗜𝗣𝗧𝗜𝗢𝗡 🕵️
+**'''
+    
     HELP_M = '''```
 ⌬ ๏ ʟᴇᴛ's ɪɴᴛʀᴏᴅᴜᴄᴇ ᴍᴜsɪᴄ ʙᴏᴛ```
 
