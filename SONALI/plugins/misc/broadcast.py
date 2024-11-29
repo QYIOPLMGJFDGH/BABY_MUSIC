@@ -55,6 +55,7 @@ async def list_subscribers(client, message):
     if message.from_user.id != OWNER_ID:
         return await message.reply("यह कमांड केवल Owner उपयोग कर सकते हैं।")
 
+    # सभी सब्सक्राइबर्स की सूची लोड करें
     all_subscribers = list(subscribers.find())
     if not all_subscribers:
         return await message.reply("कोई भी सब्सक्राइबर नहीं मिला।")
@@ -63,19 +64,30 @@ async def list_subscribers(client, message):
     for sub in all_subscribers:
         user_id = sub["user_id"]
         expiry_date = sub["expiry_date"]
-        subscription_days = sub.get("subscription_days", "N/A")  # सब्सक्रिप्शन अवधि
-        remaining_time = expiry_date - datetime.now()
+        subscription_days = sub.get("subscription_days")  # सब्सक्रिप्शन अवधि
+        added_on = sub.get("added_on")  # यूजर कब ऐड हुआ था
 
+        # सब्सक्रिप्शन अवधि का पुनः कैलकुलेशन
+        if added_on:
+            added_on_date = datetime.strptime(added_on, "%Y-%m-%d %H:%M:%S")
+            subscription_days = (expiry_date - added_on_date).days
+        else:
+            subscription_days = "N/A"
+
+        # बाकी समय निकालें
+        remaining_time = expiry_date - datetime.now()
         days = remaining_time.days
         hours, remainder = divmod(remaining_time.seconds, 3600)
         minutes, _ = divmod(remainder, 60)
 
+        # यूजर का नाम प्राप्त करें
         try:
             user = await app.get_users(user_id)
-            user_name = user.mention if user.mention else "Unknown"  # नाम को मेंशन करें
+            user_name = user.mention if user.first_name else "Unknown"
         except:
             user_name = "Unknown"
 
+        # विवरण तैयार करें
         text += (
             f"**Name**: {user_name}\n"
             f"**UserID**: `{user_id}`\n"
@@ -83,7 +95,9 @@ async def list_subscribers(client, message):
             f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
         )
 
+    # उत्तर भेजें
     await message.reply(text, disable_web_page_preview=True)
+
 
 
 
