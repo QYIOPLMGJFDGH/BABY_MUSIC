@@ -144,6 +144,12 @@ async def my_stats(client, message):
     hours, remainder = divmod(remaining_time.seconds, 3600)
     minutes, _ = divmod(remainder, 60)
 
+    try:
+                user = await app.get_users(user_id)
+                user_name = user.mention if user.first_name else "Unknown"
+            except:
+                user_name = "Unknown"
+
     # Convert times to IST
     added_on_ist = added_on.astimezone(india_tz).strftime('%Y-%m-%d %H:%M:%S')
     expiry_date_ist = expiry_date.astimezone(india_tz).strftime('%Y-%m-%d %H:%M:%S')
