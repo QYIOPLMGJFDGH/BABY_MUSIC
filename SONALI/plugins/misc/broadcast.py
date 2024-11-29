@@ -149,8 +149,7 @@ async def my_stats(client, message):
 
     # Prepare stats message
     text = (
-        f"```
-        Your Subscription Stats```\n\n"
+        f"```Your Subscription Stats```\n\n"
         f"**Subscription Added On (IST)**: `{added_on_ist}`\n"
         f"**Subscription Expiry Date (IST)**: `{expiry_date_ist}`\n"
         f"**Subscription Days**: `{subscription_days}` days\n"
