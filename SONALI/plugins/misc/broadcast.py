@@ -226,16 +226,20 @@ async def remove_command(client, message):
         await message.reply("Pʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴄᴏʀʀᴇᴄᴛ: `/rm user_id`")
 
 
-@app.on_message(filters.command("subscription"))
-async def subscription_handler(client, message):
-    text = (
-        "Hᴇʏ ɴɪᴄᴇ ᴛᴏ ᴍᴇᴇᴛ ʏᴏᴜ\n"
-        "Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ғʀᴇᴇ ᴘʀᴏᴍᴏ\n"
-        "Aʟʟ ʙᴏᴛ ᴜɴʟᴏᴄᴋᴇᴅ ғᴏʀ ʏᴏᴜ\n"
-        "Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ᴜsᴇ ғʀᴇᴇ ᴀᴅᴠᴀɴᴄᴇ ᴀɪ ᴛᴏᴏʟ\n"
-        "Aʟʟ ɪs ᴘᴏssɪʙʟᴇ 😊 ɢᴏ ᴛᴏ @BABY_MUSIC09_BOT Sᴛᴀʀᴛ ᴀɴᴅ Dᴍ Oᴡɴᴇʀ ᴛᴏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ"
-    )
-    await message.reply(text)
+@app.on_message(filters.command("start"))
+async def start_handler(client, message):
+    # स्टार्ट डेटा प्राप्त करें
+    start_data = message.text.split(" ", 1)[1] if len(message.text.split()) > 1 else None
+
+    # यदि स्टार्ट डेटा 'subscription' है, तो संदेश भेजें
+    if start_data == "subscription":
+        text = (
+            "Hᴇʏ ɪ ᴀᴍ sᴜʙsᴄʀɪʙᴇᴅ ᴛᴏ ʙᴀʙʏᴍᴜsɪᴄ\n"
+            "Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ғʀᴇᴇ ᴘʀᴏᴍᴏ\n"
+            "Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ᴜsᴇ ғʀᴇᴇ ᴀᴅᴠᴀɴᴄᴇ ᴀɪ ᴛᴏᴏʟ\n"
+            "Aʟʟ ɪs ᴘᴏssɪʙʟᴇ 😊 ɢᴏ ᴛᴏ @BABY_MUSIC09_BOT Sᴛᴀʀᴛ ᴀɴᴅ Dᴍ ᴏᴡɴᴇʀ ᴛᴏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ"
+        )
+        await message.reply(text)
 
 
 # Broadcast Command
