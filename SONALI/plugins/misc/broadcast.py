@@ -28,9 +28,17 @@ IS_BROADCASTING = False
 # Subscriber को जोड़ने का फंक्शन
 async def add_subscriber(user_id, days):
     expiry_date = datetime.now() + timedelta(days=days)
+    added_on = datetime.now()  # यूजर कब जोड़ा गया
     subscribers.update_one(
         {"user_id": user_id},
-        {"$set": {"expiry_date": expiry_date, "usage_count": 0}},
+        {
+            "$set": {
+                "expiry_date": expiry_date,
+                "added_on": added_on.strftime("%Y-%m-%d %H:%M:%S"),
+                "subscription_days": days,
+                "usage_count": 0
+            }
+        },
         upsert=True,
     )
     return True
@@ -63,16 +71,9 @@ async def list_subscribers(client, message):
     text = "### Subscriber List ###\n\n"
     for sub in all_subscribers:
         user_id = sub["user_id"]
-        expiry_date = sub["expiry_date"]
-        subscription_days = sub.get("subscription_days")  # सब्सक्रिप्शन अवधि
-        added_on = sub.get("added_on")  # यूजर कब ऐड हुआ था
-
-        # सब्सक्रिप्शन अवधि का पुनः कैलकुलेशन
-        if added_on:
-            added_on_date = datetime.strptime(added_on, "%Y-%m-%d %H:%M:%S")
-            subscription_days = (expiry_date - added_on_date).days
-        else:
-            subscription_days = "N/A"
+        expiry_date = datetime.strptime(sub["expiry_date"], "%Y-%m-%d %H:%M:%S")
+        added_on = datetime.strptime(sub["added_on"], "%Y-%m-%d %H:%M:%S")
+        subscription_days = sub["subscription_days"]  # सब्सक्रिप्शन अवधि
 
         # बाकी समय निकालें
         remaining_time = expiry_date - datetime.now()
@@ -91,13 +92,13 @@ async def list_subscribers(client, message):
         text += (
             f"**Name**: {user_name}\n"
             f"**UserID**: `{user_id}`\n"
+            f"**Added On**: `{added_on.strftime('%Y-%m-%d %H:%M:%S')}`\n"
             f"**Subscription Days**: `{subscription_days}` days\n"
             f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
         )
 
     # उत्तर भेजें
     await message.reply(text, disable_web_page_preview=True)
-
 
 
 
