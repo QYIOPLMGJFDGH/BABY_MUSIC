@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from pymongo import MongoClient
 from pyrogram import filters
 from pytz import timezone
+from pyrogram import InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.enums import ChatMembersFilter
 from pyrogram.errors import FloodWait
 from SONALI import app
@@ -149,14 +150,25 @@ async def my_stats(client, message):
 
     # Prepare stats message
     text = (
-        f"```\nYour Subscription Stats```\n\n"
-        f"**Subscription Added On (IST)**: `{added_on_ist}`\n"
-        f"**Subscription Expiry Date (IST)**: `{expiry_date_ist}`\n"
-        f"**Subscription Days**: `{subscription_days}` days\n"
-        f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
+        f"```\nYᴏᴜʀ Sᴜʙsᴄʀɪᴘᴛɪᴏɴ sᴛᴀᴛᴜs 🕐```\n\n"
+        f"Sᴜʙsᴄʀɪᴘᴛɪᴏɴ Aᴅᴅᴇᴅ Oɴ: ̗̀➛ `{added_on_ist}`\n"
+        f"Sᴜʙsᴄʀɪᴘᴛɪᴏɴ Exᴘɪʀʏ Oɴ: ̗̀➛ `{expiry_date_ist}`\n"
+        f"Mᴇᴍʙᴇʀsʜɪᴘ ғᴏʀ: ̗̀➛ `{subscription_days}` Dᴀʏs\n"
+        f"Rᴇᴍᴀɪɴɪɴɢ Tɪᴍᴇ: ̗̀➛ `{days}` Dᴀʏs, `{hours}` Hᴏᴜʀs, `{minutes}` Mɪɴᴜᴛᴇs\n\n"
+        f"Tʜᴀɴᴋs {user_name} ☺️"
     )
 
-    await message.reply(text, disable_web_page_preview=True)
+    switch_button = InlineKeyboardButton(
+        text="🔄 Check My Subscription",
+        switch_inline_query=f"subscription_status_{user_id}"  # This will be used for inline query
+    )
+
+    # Create InlineKeyboardMarkup with the switch button
+    reply_markup = InlineKeyboardMarkup([[switch_button]])
+
+    # Send the message with the button
+    await message.reply(text, reply_markup=reply_markup, disable_web_page_preview=True)
+
     
 
 
