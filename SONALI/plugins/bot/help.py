@@ -127,14 +127,25 @@ async def mb_plugin_button(client, CallbackQuery):
 @app.on_callback_query(filters.regex('spm'))      
 async def mb_plugin_button(client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    cb = callback_data.split(None, 1)[1]
-    keyboard = InlineKeyboardMarkup([
-    [InlineKeyboardButton("↺ ʙᴧᴄᴋ ↻", callback_data="cplus")]  # Support Button
-])
-    if cb == "Okieeeeee":
-        await CallbackQuery.edit_message_text(f"`something errors`",reply_markup=keyboard,parse_mode=enums.ParseMode.MARKDOWN)
+
+    # Check if the callback data has a space before trying to split
+    if ' ' in callback_data:
+        cb = callback_data.split(None, 1)[1]
     else:
-        await CallbackQuery.edit_message_text(getattr(Helper, cb), reply_markup=keyboard)
+        cb = callback_data  # If no space, the callback data itself is used
+
+    # Prepare the keyboard
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("↺ ʙᴧᴄᴋ ↻", callback_data="cplus")]  # Support Button
+    ])
+
+    # Handle the callback logic
+    if cb == "Okieeeeee":
+        await CallbackQuery.edit_message_text(f"`something errors`", reply_markup=keyboard, parse_mode=enums.ParseMode.MARKDOWN)
+    else:
+        # Assuming Helper is a valid class and cb contains a valid attribute
+        await CallbackQuery.edit_message_text(getattr(Helper, cb, "Invalid Callback"), reply_markup=keyboard)
+
 
 @app.on_callback_query(filters.regex('cplus'))      
 async def mb_plugin_button(client, CallbackQuery):
