@@ -130,7 +130,7 @@ async def my_stats(client, message):
     if not user_data:
         # InlineKeyboardMarkup और Button जोड़ें
         keyboard = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("ɪɴғᴏ", url="https://t.me/Goodbyenjbot?start=Subscription")]]
+            [[InlineKeyboardButton("ɪɴғᴏ", url="https://t.me/Goodbyenjbot?start=subscription")]]
         )
 
         # संदेश के साथ बटन भेजें
@@ -224,6 +224,18 @@ async def remove_command(client, message):
         await message.reply(f"Usᴇʀ {user_id} ᴛᴏ ʀᴇᴍᴏᴠᴇ sᴜʙsᴄʀɪʙᴇʀʟɪsᴛ !")
     except:
         await message.reply("Pʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴄᴏʀʀᴇᴄᴛ: `/rm user_id`")
+
+
+@app.on_message(filters.command("subscription"))
+async def subscription_handler(client, message):
+    text = (
+        "Hᴇʏ ɴɪᴄᴇ ᴛᴏ ᴍᴇᴇᴛ ʏᴏᴜ\n"
+        "Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ғʀᴇᴇ ᴘʀᴏᴍᴏ\n"
+        "Aʟʟ ʙᴏᴛ ᴜɴʟᴏᴄᴋᴇᴅ ғᴏʀ ʏᴏᴜ\n"
+        "Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ᴜsᴇ ғʀᴇᴇ ᴀᴅᴠᴀɴᴄᴇ ᴀɪ ᴛᴏᴏʟ\n"
+        "Aʟʟ ɪs ᴘᴏssɪʙʟᴇ 😊 ɢᴏ ᴛᴏ @BABY_MUSIC09_BOT Sᴛᴀʀᴛ ᴀɴᴅ Dᴍ Oᴡɴᴇʀ ᴛᴏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ"
+    )
+    await message.reply(text)
 
 
 # Broadcast Command
