@@ -150,17 +150,28 @@ async def mb_plugin_button(client, CallbackQuery):
 @app.on_callback_query(filters.regex('cplus'))      
 async def mb_plugin_button(client, CallbackQuery):
     callback_data = CallbackQuery.data.strip()
-    cb = callback_data.split(None, 1)[1]
-    keyboard = InlineKeyboardMarkup([
-    [InlineKeyboardButton("⏤͟͟͞͞★ ᴜᴛᴛᴀᴍ", url="https://t.me/UTTAM470"),  # Back Button
-     InlineKeyboardButton("˹ ᴜᴘᴅᴧᴛᴇ ˼", url="https://t.me/BABY09_WORLD")],  # Update Button
-    [InlineKeyboardButton("Sᴜʙsᴄʀɪᴘᴛɪᴏɴ ᴘʟᴀɴ 🫂", callback_data="spm HELP_raid")],
-    [InlineKeyboardButton("↺ ʙᴧᴄᴋ ↻", callback_data="modebot_cb")]  # Support Button
-])
-    if cb == "Okieeeeee":
-        await CallbackQuery.edit_message_text(f"`something errors`",reply_markup=keyboard,parse_mode=enums.ParseMode.MARKDOWN)
+    split_data = callback_data.split(None, 1)
+
+    # Check if the split was successful
+    if len(split_data) > 1:
+        cb = split_data[1]
     else:
+        cb = None  # Set a default value for cb if no second part is found
+    
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton("⏤͟͟͞͞★ ᴜᴛᴛᴀᴍ", url="https://t.me/UTTAM470"),  # Back Button
+         InlineKeyboardButton("˹ ᴜᴘᴅᴧᴛᴇ ˼", url="https://t.me/BABY09_WORLD")],  # Update Button
+        [InlineKeyboardButton("Sᴜʙsᴄʀɪᴘᴛɪᴏɴ ᴘʟᴀɴ 🫂", callback_data="spm HELP_raid")],
+        [InlineKeyboardButton("↺ ʙᴧᴄᴋ ↻", callback_data="modebot_cb")]  # Support Button
+    ])
+    
+    if cb == "Okieeeeee":
+        await CallbackQuery.edit_message_text(f"`something errors`", reply_markup=keyboard, parse_mode=enums.ParseMode.MARKDOWN)
+    elif cb:
         await CallbackQuery.edit_message_text(getattr(Helper, cb), reply_markup=keyboard)
+    else:
+        await CallbackQuery.edit_message_text("No callback data provided", reply_markup=keyboard)
+
 
 @app.on_callback_query(filters.regex("promotext") & ~BANNED_USERS)
 async def promo_callback(client, CallbackQuery):
