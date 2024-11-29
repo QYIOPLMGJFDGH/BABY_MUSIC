@@ -63,7 +63,7 @@ async def clean_expired_subscribers():
 @app.on_message(filters.command("sublist"))
 async def list_subscribers(client, message):
     if message.from_user.id != OWNER_ID:
-        return await message.reply("यह कमांड केवल Owner उपयोग कर सकते हैं।")
+        return 
 
     all_subscribers = list(subscribers.find())
     if not all_subscribers:
@@ -185,31 +185,31 @@ async def my_stats(client, message):
 @app.on_message(filters.command("add"))
 async def add_command(client, message):
     if message.from_user.id != OWNER_ID:
-        return await message.reply("यह कमांड केवल Owner उपयोग कर सकते हैं।")
+        return 
 
     try:
         args = message.text.split()
         user_id = int(args[1])
         days = int(args[2])
         await add_subscriber(user_id, days)
-        await message.reply(f"User {user_id} को {days} दिन के लिए सब्सक्राइबर लिस्ट में जोड़ा गया।")
+        await message.reply(f"Usᴇʀ {user_id} ᴛᴏ ᴀᴅᴅᴇᴅ sᴜʙsᴄʀɪʙᴇʀʟɪsᴛ ғᴏʀ {days} ᴅᴀʏs !")
     except:
-        await message.reply("कृपया सही फॉर्मेट में कमांड डालें: `/add user_id days`")
+        await message.reply("Pʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴄᴏʀʀᴇᴄᴛ: `/add user_id days`")
 
 
 # Remove Subscriber Command
 @app.on_message(filters.command("rm"))
 async def remove_command(client, message):
     if message.from_user.id != OWNER_ID:
-        return await message.reply("यह कमांड केवल Owner उपयोग कर सकते हैं।")
+        return 
 
     try:
         args = message.text.split()
         user_id = int(args[1])
         await remove_subscriber(user_id)
-        await message.reply(f"User {user_id} को सब्सक्राइबर लिस्ट से हटा दिया गया।")
+        await message.reply(f"Usᴇʀ {user_id} ᴛᴏ ʀᴇᴍᴏᴠᴇ sᴜʙsᴄʀɪʙᴇʀʟɪsᴛ !")
     except:
-        await message.reply("कृपया सही फॉर्मेट में कमांड डालें: `/rm user_id`")
+        await message.reply("Pʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴄᴏʀʀᴇᴄᴛ: `/rm user_id`")
 
 
 # Broadcast Command
@@ -223,11 +223,11 @@ async def broadcast_message(client, message, _):
     if user_id != OWNER_ID:
         user = subscribers.find_one({"user_id": user_id})
         if not user:
-            return await message.reply("आप सब्सक्राइबर लिस्ट में नहीं हैं।")
+            return await message.reply("Oɴʟʏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ ᴜsᴇʀ ᴜsᴇ !")
 
         # Usage limit चेक करें
         if user["usage_count"] >= 3:
-            return await message.reply("आपने आज की लिमिट पूरी कर ली है। कृपया 24 घंटे बाद कोशिश करें।")
+            return await message.reply("Yᴏᴜ ᴀʀᴇ ᴀʟʀᴇᴀᴅʏ ᴜsᴇs ᴛᴏᴅᴀʏ ǫᴜɪᴛᴀ ʀᴇᴛʀʏ ᴀғᴛᴇʀ 24ʜʀ")
 
         # Usage count बढ़ाएं
         subscribers.update_one({"user_id": user_id}, {"$inc": {"usage_count": 1}})
