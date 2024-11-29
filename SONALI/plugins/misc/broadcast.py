@@ -127,7 +127,7 @@ async def my_stats(client, message):
     # MongoDB में यूज़र को खोजें
     user_data = subscribers.find_one({"user_id": user_id})
     if not user_data:
-        return await message.reply("आपका सब्सक्रिप्शन रिकॉर्ड नहीं मिला। कृपया पहले सब्सक्राइब करें।")
+        return await message.reply("Yᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀ sᴜʙsᴄʀɪʙᴇʀ ᴜsᴇʀ !")
 
     # India timezone setup
     india_tz = timezone("Asia/Kolkata")
@@ -149,7 +149,8 @@ async def my_stats(client, message):
 
     # Prepare stats message
     text = (
-        f"### Your Subscription Stats ###\n\n"
+        f"```
+        Your Subscription Stats```\n\n"
         f"**Subscription Added On (IST)**: `{added_on_ist}`\n"
         f"**Subscription Expiry Date (IST)**: `{expiry_date_ist}`\n"
         f"**Subscription Days**: `{subscription_days}` days\n"
