@@ -2,6 +2,7 @@ import asyncio
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 from pyrogram import filters
+from pytz import timezone
 from pyrogram.enums import ChatMembersFilter
 from pyrogram.errors import FloodWait
 from SONALI import app
@@ -67,23 +68,26 @@ async def list_subscribers(client, message):
     if not all_subscribers:
         return await message.reply("कोई भी सब्सक्राइबर नहीं मिला।")
 
+    # India timezone setup
+    india_tz = timezone("Asia/Kolkata")
+
     text = "### Subscriber List ###\n\n"
     for sub in all_subscribers:
         try:
             user_id = sub["user_id"]
-            
+
             # Expiry date को सही प्रकार से हैंडल करें
             if isinstance(sub["expiry_date"], datetime):
                 expiry_date = sub["expiry_date"]
             else:
                 expiry_date = datetime.strptime(sub["expiry_date"], "%Y-%m-%d %H:%M:%S")
-            
+
             # Added On को सही प्रकार से हैंडल करें
             if isinstance(sub["added_on"], datetime):
                 added_on = sub["added_on"]
             else:
                 added_on = datetime.strptime(sub["added_on"], "%Y-%m-%d %H:%M:%S")
-            
+
             subscription_days = sub["subscription_days"]
 
             # Remaining time calculation
@@ -99,14 +103,14 @@ async def list_subscribers(client, message):
             except:
                 user_name = "Unknown"
 
-            # Proper formatting for added_on and expiry_date
-            added_on_formatted = added_on.strftime('%Y-%m-%d %H:%M:%S')  # सही फॉर्मेट
-            expiry_date_formatted = expiry_date.strftime('%Y-%m-%d %H:%M:%S')  # सही फॉर्मेट
+            # Convert times to IST
+            added_on_ist = added_on.astimezone(india_tz).strftime('%Y-%m-%d %H:%M:%S')
+            expiry_date_ist = expiry_date.astimezone(india_tz).strftime('%Y-%m-%d %H:%M:%S')
 
             text += (
                 f"**Name**: {user_name}\n"
                 f"**UserID**: `{user_id}`\n"
-                f"**Added On**: `{added_on_formatted}`\n"
+                f"**Added On (IST)**: `{added_on_ist}`\n"
                 f"**Subscription Days**: `{subscription_days}` days\n"
                 f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
             )
@@ -116,6 +120,44 @@ async def list_subscribers(client, message):
     await message.reply(text, disable_web_page_preview=True)
 
 
+@app.on_message(filters.command("mystats"))
+async def my_stats(client, message):
+    user_id = message.from_user.id
+
+    # MongoDB में यूज़र को खोजें
+    user_data = subscribers.find_one({"user_id": user_id})
+    if not user_data:
+        return await message.reply("आपका सब्सक्रिप्शन रिकॉर्ड नहीं मिला। कृपया पहले सब्सक्राइब करें।")
+
+    # India timezone setup
+    india_tz = timezone("Asia/Kolkata")
+
+    # डेटा प्राप्त करें
+    expiry_date = datetime.strptime(user_data["expiry_date"], "%Y-%m-%d %H:%M:%S")
+    added_on = datetime.strptime(user_data["added_on"], "%Y-%m-%d %H:%M:%S")
+    subscription_days = user_data["subscription_days"]
+
+    # Remaining time calculation
+    remaining_time = expiry_date - datetime.now()
+    days = remaining_time.days
+    hours, remainder = divmod(remaining_time.seconds, 3600)
+    minutes, _ = divmod(remainder, 60)
+
+    # Convert times to IST
+    added_on_ist = added_on.astimezone(india_tz).strftime('%Y-%m-%d %H:%M:%S')
+    expiry_date_ist = expiry_date.astimezone(india_tz).strftime('%Y-%m-%d %H:%M:%S')
+
+    # Prepare stats message
+    text = (
+        f"### Your Subscription Stats ###\n\n"
+        f"**Subscription Added On (IST)**: `{added_on_ist}`\n"
+        f"**Subscription Expiry Date (IST)**: `{expiry_date_ist}`\n"
+        f"**Subscription Days**: `{subscription_days}` days\n"
+        f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
+    )
+
+    await message.reply(text, disable_web_page_preview=True)
+    
 
 
 
