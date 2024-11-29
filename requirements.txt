@@ -8,6 +8,7 @@ beautifulsoup4
 bs4
 cloudscraper
 deepai
+pytz
 daxxhub
 dnspython
 emojis
