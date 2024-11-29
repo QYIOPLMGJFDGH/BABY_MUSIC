@@ -167,9 +167,14 @@ async def my_stats(client, message):
 
     # Inline button to check subscription status
     switch_button = InlineKeyboardButton(
-        text="Iɴᴠɪᴛᴇ ᴏᴛʜᴇʀs & sᴜᴘᴘᴏʀᴛ",
-        switch_inline_query=f"{text}"  # This will be used for inline query
+    text="Iɴᴠɪᴛᴇ ᴏᴛʜᴇʀs & sᴜᴘᴘᴏʀᴛ",
+    switch_inline_query=(
+        """Hᴇʏ ɪ ᴀᴍ sᴜʙsᴄʀɪʙᴇᴅ ᴛᴏ ʙᴀʙʏᴍᴜsɪᴄ
+Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ғʀᴇᴇ ᴘʀᴏᴍᴏ
+Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ᴜsᴇ ғʀᴇᴇ ᴀᴅᴠᴀɴᴄᴇ ᴀɪ ᴛᴏᴏʟ
+Aʟʟ ɪs ᴘᴏssɪʙʟᴇ 😊 ɢᴏ ᴛᴏ @BABY_MUSIC09_BOT Sᴛᴀʀᴛ ᴀɴᴅ Dᴍ ᴏᴡɴᴇʀ ᴛᴏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ"""
     )
+)
 
     # Create InlineKeyboardMarkup with the switch button
     reply_markup = InlineKeyboardMarkup([[switch_button]])
