@@ -50,7 +50,42 @@ async def clean_expired_subscribers():
         await asyncio.sleep(3600)  # हर घंटे चेक करें
 
 
-# Add Subscriber Command
+@app.on_message(filters.command("sublist"))
+async def list_subscribers(client, message):
+    if message.from_user.id != OWNER_ID:
+        return await message.reply("यह कमांड केवल Owner उपयोग कर सकते हैं।")
+
+    all_subscribers = list(subscribers.find())
+    if not all_subscribers:
+        return await message.reply("कोई भी सब्सक्राइबर नहीं मिला।")
+
+    text = "### Subscriber List ###\n\n"
+    for sub in all_subscribers:
+        user_id = sub["user_id"]
+        expiry_date = sub["expiry_date"]
+        subscription_days = sub.get("subscription_days", "N/A")  # सब्सक्रिप्शन अवधि
+        remaining_time = expiry_date - datetime.now()
+
+        days = remaining_time.days
+        hours, remainder = divmod(remaining_time.seconds, 3600)
+        minutes, _ = divmod(remainder, 60)
+
+        try:
+            user = await app.get_users(user_id)
+            user_name = user.first_name if user.first_name else "Unknown"
+        except:
+            user_name = "Unknown"
+
+        text += (
+            f"**Name**: {user_name}\n"
+            f"**UserID**: `{user_id}`\n"
+            f"**Subscription Days**: `{subscription_days}` days\n"
+            f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
+        )
+
+    await message.reply(text)
+
+
 @app.on_message(filters.command("add"))
 async def add_command(client, message):
     if message.from_user.id != OWNER_ID:
@@ -116,38 +151,102 @@ async def broadcast_message(client, message, _):
     IS_BROADCASTING = True
     await message.reply_text(_["broad_1"])
 
-    # ब्रॉडकास्ट संदेश भेजना
-    sent = 0
-    pin = 0
-    schats = await get_served_chats()
-    chats = [int(chat["chat_id"]) for chat in schats]
-    for i in chats:
+    if "-nobot" not in message.text:
+        sent = 0
+        pin = 0
+        chats = []
+        schats = await get_served_chats()
+        for chat in schats:
+            chats.append(int(chat["chat_id"]))
+        for i in chats:
+            try:
+                m = (
+                    await app.forward_messages(i, y, x)
+                    if message.reply_to_message
+                    else await app.send_message(i, text=query)
+                )
+                if "-pin" in message.text:
+                    try:
+                        await m.pin(disable_notification=True)
+                        pin += 1
+                    except:
+                        continue
+                elif "-pinloud" in message.text:
+                    try:
+                        await m.pin(disable_notification=False)
+                        pin += 1
+                    except:
+                        continue
+                sent += 1
+                await asyncio.sleep(0.2)
+            except FloodWait as fw:
+                flood_time = int(fw.value)
+                if flood_time > 200:
+                    continue
+                await asyncio.sleep(flood_time)
+            except:
+                continue
         try:
-            m = await app.forward_messages(i, y, x) if message.reply_to_message else await app.send_message(i, text=query)
-            if "-pin" in message.text:
-                try:
-                    await m.pin(disable_notification=True)
-                    pin += 1
-                except:
-                    continue
-            elif "-pinloud" in message.text:
-                try:
-                    await m.pin(disable_notification=False)
-                    pin += 1
-                except:
-                    continue
-            sent += 1
-            await asyncio.sleep(0.2)
-        except FloodWait as fw:
-            await asyncio.sleep(fw.value)
+            await message.reply_text(_["broad_3"].format(sent, pin))
         except:
-            continue
+            pass
 
-    try:
-        await message.reply_text(_["broad_3"].format(sent, pin))
-    except:
-        pass
+    if "-user" in message.text:
+        susr = 0
+        served_users = []
+        susers = await get_served_users()
+        for user in susers:
+            served_users.append(int(user["user_id"]))
+        for i in served_users:
+            try:
+                m = (
+                    await app.forward_messages(i, y, x)
+                    if message.reply_to_message
+                    else await app.send_message(i, text=query)
+                )
+                susr += 1
+                await asyncio.sleep(0.2)
+            except FloodWait as fw:
+                flood_time = int(fw.value)
+                if flood_time > 200:
+                    continue
+                await asyncio.sleep(flood_time)
+            except:
+                pass
+        try:
+            await message.reply_text(_["broad_4"].format(susr))
+        except:
+            pass
 
+    if "-assistant" in message.text:
+        aw = await message.reply_text(_["broad_5"])
+        text = _["broad_6"]
+        from YTMUSIC.core.userbot import assistants
+
+        for num in assistants:
+            sent = 0
+            client = await get_client(num)
+            async for dialog in client.get_dialogs():
+                try:
+                    await client.forward_messages(
+                        dialog.chat.id, y, x
+                    ) if message.reply_to_message else await client.send_message(
+                        dialog.chat.id, text=query
+                    )
+                    sent += 1
+                    await asyncio.sleep(3)
+                except FloodWait as fw:
+                    flood_time = int(fw.value)
+                    if flood_time > 200:
+                        continue
+                    await asyncio.sleep(flood_time)
+                except:
+                    continue
+            text += _["broad_7"].format(num, sent)
+        try:
+            await aw.edit_text(text)
+        except:
+            pass
     IS_BROADCASTING = False
 
 
