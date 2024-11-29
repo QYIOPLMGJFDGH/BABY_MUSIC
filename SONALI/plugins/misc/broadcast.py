@@ -130,7 +130,7 @@ async def my_stats(client, message):
     if not user_data:
         # InlineKeyboardMarkup और Button जोड़ें
         keyboard = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("ɪɴғᴏ", url="https://t.me/Goodbyenjbot?start=subscription")]]
+            [[InlineKeyboardButton("ɪɴғᴏ", url="https://t.me/BABY09_WORLD/250")]]
         )
 
         # संदेश के साथ बटन भेजें
@@ -191,11 +191,6 @@ Aʟʟ ɪs ᴘᴏssɪʙʟᴇ 😊 ɢᴏ ᴛᴏ @BABY_MUSIC09_BOT Sᴛᴀʀᴛ ᴀ
     # Send the message with the button
     await message.reply(text, reply_markup=reply_markup, disable_web_page_preview=True)
 
-
-    
-
-
-
 @app.on_message(filters.command("add"))
 async def add_command(client, message):
     if message.from_user.id != OWNER_ID:
@@ -225,21 +220,6 @@ async def remove_command(client, message):
     except:
         await message.reply("Pʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴄᴏʀʀᴇᴄᴛ: `/rm user_id`")
 
-
-@app.on_message(filters.command("start"))
-async def start_handler(client, message):
-    # स्टार्ट डेटा प्राप्त करें
-    start_data = message.text.split(" ", 1)[1] if len(message.text.split()) > 1 else None
-
-    # यदि स्टार्ट डेटा 'subscription' है, तो संदेश भेजें
-    if start_data == "subscription":
-        text = (
-            "Hᴇʏ ɪ ᴀᴍ sᴜʙsᴄʀɪʙᴇᴅ ᴛᴏ ʙᴀʙʏᴍᴜsɪᴄ\n"
-            "Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ғʀᴇᴇ ᴘʀᴏᴍᴏ\n"
-            "Dᴏ ʏᴏᴜ ᴡᴀɴᴛ ᴜsᴇ ғʀᴇᴇ ᴀᴅᴠᴀɴᴄᴇ ᴀɪ ᴛᴏᴏʟ\n"
-            "Aʟʟ ɪs ᴘᴏssɪʙʟᴇ 😊 ɢᴏ ᴛᴏ @BABY_MUSIC09_BOT Sᴛᴀʀᴛ ᴀɴᴅ Dᴍ ᴏᴡɴᴇʀ ᴛᴏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ"
-        )
-        await message.reply(text)
 
 
 # Broadcast Command
