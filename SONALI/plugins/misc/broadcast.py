@@ -131,7 +131,7 @@ async def my_stats(client, message):
     if not user_data:
         # InlineKeyboardMarkup और Button जोड़ें
         keyboard = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("ɪɴғᴏ", callback="spm SPM")]]
+            [[InlineKeyboardButton("ɪɴғᴏ", callback="SPM")]]
         )
 
         # संदेश के साथ बटन भेजें
