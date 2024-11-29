@@ -128,8 +128,17 @@ async def my_stats(client, message):
     # MongoDB में यूज़र को खोजें
     user_data = subscribers.find_one({"user_id": user_id})
     if not user_data:
-        return await message.reply("Yᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀ sᴜʙsᴄʀɪʙᴇʀ ᴜsᴇʀ !")
+        # InlineKeyboardMarkup और Button जोड़ें
+        keyboard = InlineKeyboardMarkup(
+            [[InlineKeyboardButton("ɪɴғᴏ", callback="spm SPM")]]
+        )
 
+        # संदेश के साथ बटन भेजें
+        return await message.reply(
+            "Yᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀ sᴜʙsᴄʀɪʙᴇʀ ᴜsᴇʀ !\n\n"
+            "Fɪʀsᴛ ɢᴏ ɪɴғᴏ ᴀɴᴅ sᴜʙsᴄʀɪʙᴇ. 🙂",
+            reply_markup=keyboard,
+        )
     # India timezone setup
     india_tz = timezone("Asia/Kolkata")
 
