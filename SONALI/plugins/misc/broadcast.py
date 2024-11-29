@@ -72,18 +72,18 @@ async def list_subscribers(client, message):
         try:
             user_id = sub["user_id"]
             
-            # अगर expiry_date पहले से datetime है, तो इसे स्ट्रिंग में कनवर्ट करें
+            # Expiry date को सही प्रकार से हैंडल करें
             if isinstance(sub["expiry_date"], datetime):
                 expiry_date = sub["expiry_date"]
             else:
                 expiry_date = datetime.strptime(sub["expiry_date"], "%Y-%m-%d %H:%M:%S")
             
-            # अगर added_on पहले से datetime है, तो इसे स्ट्रिंग में कनवर्ट करें
+            # Added On को सही प्रकार से हैंडल करें
             if isinstance(sub["added_on"], datetime):
                 added_on = sub["added_on"]
             else:
                 added_on = datetime.strptime(sub["added_on"], "%Y-%m-%d %H:%M:%S")
-
+            
             subscription_days = sub["subscription_days"]
 
             # Remaining time calculation
@@ -99,10 +99,14 @@ async def list_subscribers(client, message):
             except:
                 user_name = "Unknown"
 
+            # Proper formatting for added_on and expiry_date
+            added_on_formatted = added_on.strftime('%Y-%m-%d %H:%M:%S')  # सही फॉर्मेट
+            expiry_date_formatted = expiry_date.strftime('%Y-%m-%d %H:%M:%S')  # सही फॉर्मेट
+
             text += (
                 f"**Name**: {user_name}\n"
                 f"**UserID**: `{user_id}`\n"
-                f"**Added On**: `{added_on.strftime('%Y-%m-%d %H:%M:%S')}`\n"
+                f"**Added On**: `{added_on_formatted}`\n"
                 f"**Subscription Days**: `{subscription_days}` days\n"
                 f"**Remaining Time**: `{days}` days, `{hours}` hours, `{minutes}` minutes\n\n"
             )
@@ -110,6 +114,7 @@ async def list_subscribers(client, message):
             text += f"Error while processing subscriber {sub.get('user_id', 'Unknown')}: {e}\n\n"
 
     await message.reply(text, disable_web_page_preview=True)
+
 
 
 
