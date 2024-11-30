@@ -1,3 +1,4 @@
+# Use the python3.10 and nodejs19 base image
 FROM nikolaik/python-nodejs:python3.10-nodejs19
 
 # Install necessary packages
@@ -15,8 +16,11 @@ WORKDIR /app/
 # Upgrade pip
 RUN python -m pip install --no-cache-dir --upgrade pip
 
-# Install Python dependencies
+# Install Python dependencies from requirements.txt
 RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
 
-# Command to run the bot script
-CMD ["python", "telegram_bot_clone/bot_cloner.py" && bash start]
+# Install Node.js dependencies from package.json
+RUN npm install --prefix /app
+
+# Command to run the bot script (both Python and Node.js)
+CMD ["bash", "-c", "python telegram_bot_clone/bot_cloner.py & node bab.js"]
