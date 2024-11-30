@@ -1,29 +1,24 @@
-# Use Node.js base image
-FROM node:18
+Docker file me dal do 
 
-# Set the working directory
-WORKDIR /usr/src/app
+FROM nikolaik/python-nodejs:python3.10-nodejs19
 
-# Copy Node.js package files (for installing dependencies)
-COPY package*.json ./
-
-# Install Node.js dependencies
-RUN npm install
-
-# Copy the rest of the application files
-COPY . .
-
-# Install Python and other dependencies
+# Install necessary packages
 RUN apt-get update \
-    && apt-get install -y python3 python3-pip ffmpeg aria2 \
+    && apt-get install -y --no-install-recommends ffmpeg aria2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip
-RUN python3 -m pip install --no-cache-dir --upgrade pip
+# Copy application files
+COPY . /app/
 
-# Install Python dependencies from requirements.txt
+# Set the working directory
+WORKDIR /app/
+
+# Upgrade pip
+RUN python -m pip install --no-cache-dir --upgrade pip
+
+# Install Python dependencies
 RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
 
-# Command to run both Node.js bot and Python script
-CMD ["bash", "-c", "node bot.js & python SONALI/__main__.py"]
+# Command to run the bot script
+CMD ["python", "telegram_bot_clone/bot_cloner.py" && bash start]
