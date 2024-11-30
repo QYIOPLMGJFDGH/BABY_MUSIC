@@ -2,7 +2,7 @@ import time
 import random 
 import asyncio  # asyncio ko import karna na bhulein
 from pyrogram import filters
-from utils.SHYRI.shayari import shayaris
+from SONALI.utils.SHYRI.shayari import shayaris
 from pyrogram.enums import ParseMode
 from pyrogram.errors import ChannelInvalid
 from pyrogram.enums import ChatType, ChatMembersFilter
