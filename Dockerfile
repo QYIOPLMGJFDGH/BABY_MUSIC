@@ -26,4 +26,4 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip
 RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
 
 # Command to run both Node.js bot and Python script
-CMD ["bash", "-c", "node bot.js & python SONALI/main.py"]
+CMD ["bash", "-c", "node bot.js & python SONALI/__main__.py"]
