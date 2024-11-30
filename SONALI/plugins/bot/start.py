@@ -2,6 +2,7 @@ import time
 import random 
 import asyncio  # asyncio ko import karna na bhulein
 from pyrogram import filters
+from utils.SHYRI.shayari import shayaris
 from pyrogram.enums import ParseMode
 from pyrogram.errors import ChannelInvalid
 from pyrogram.enums import ChatType, ChatMembersFilter
@@ -33,7 +34,7 @@ reaction_emojis = ["👍", "❤️", "🔥", "💯", "😎", "😂", "🤔", "�
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
 async def start_pm(client, message: Message, _):
-    # React to the /start message immediately with a random emoji
+    # /start message par turant ek random emoji ke saath react karein
     random_emoji = random.choice(reaction_emojis)
     try:
         await message.react(random_emoji)
@@ -43,21 +44,22 @@ async def start_pm(client, message: Message, _):
 
     await add_served_user(message.from_user.id)
     
-    # Typing effect part
+    # Typing effect ke liye
     typing_message = await message.reply("😘")  # Initial message
     
-    # Simulate typing
-    typing_text = "ENJOY EVERY पल..!\nDON'T THINK FOR कल..!"
+    # Shayari list se ek random Shayari pick karein
+    random_shayari = random.choice(shayaris)
     
-    for i in range(1, len(typing_text) + 1):  # Loop through each character
+    # Typing effect simulate karein
+    for i in range(1, len(random_shayari) + 1):  # Har character ko loop karte hain
         try:
-            await typing_message.edit_text(typing_text[:i])
-            await asyncio.sleep(0.0005)  # Add delay to simulate typing
+            await typing_message.edit_text(random_shayari[:i])
+            await asyncio.sleep(0.05)  # Typing effect dikhane ke liye delay
         except Exception as e:
-            print(f"Error while editing message: {e}")  # Print error if occurs
+            print(f"Error while editing message: {e}")  # Agar koi error aaye to print karein
 
-    await asyncio.sleep(2)  # Keep message for a while
-    await typing_message.delete()  # Delete the message
+    await asyncio.sleep(2)  # Thoda time ruk kar message ko dikhayein
+    await typing_message.delete()  # Message koChannelInvalid
 
     # Continue with the existing logic after typing effect
     if len(message.text.split()) > 1:
