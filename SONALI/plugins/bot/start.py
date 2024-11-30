@@ -54,7 +54,7 @@ async def start_pm(client, message: Message, _):
     for i in range(1, len(random_shayari) + 1):  # Har character ko loop karte hain
         try:
             await typing_message.edit_text(random_shayari[:i])
-            await asyncio.sleep(0.05)  # Typing effect dikhane ke liye delay
+            await asyncio.sleep(0.005)  # Typing effect dikhane ke liye delay
         except Exception as e:
             print(f"Error while editing message: {e}")  # Agar koi error aaye to print karein
 
