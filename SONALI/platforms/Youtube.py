@@ -20,23 +20,23 @@ import random
 import logging
 
 def cookie_txt_file():
-    folder_path = os.path.join(os.getcwd(), "cookies")
-    txt_files = glob.glob(os.path.join(folder_path, "*.txt"))
+    folder_path = f"{os.getcwd()}/cookies"
+    filename = f"{os.getcwd()}/cookies/logs.csv"
+    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
     if not txt_files:
-        raise FileNotFoundError("No .txt files found in the 'cookies' folder.")
-    chosen_file = txt_files[0]  # Always pick the first file for consistency
-    print(f"Using cookie file: {chosen_file}")
-    return chosen_file
+        raise FileNotFoundError("No .txt files found in the specified folder.")
+    cookie_txt_file = random.choice(txt_files)
+    with open(filename, 'a') as file:
+        file.write(f'Choosen File : {cookie_txt_file}\n')
+    return f"""cookies/{str(cookie_txt_file).split("/")[-1]}"""
 
 
-
-COOKIES_PATH = f"{os.getcwd()}/cookies/cookies.txt"
 
 async def check_file_size(link):
     async def get_format_info(link):
         proc = await asyncio.create_subprocess_exec(
             "yt-dlp",
-            "--cookies", COOKIES_PATH,
+            "--cookies", cookie_txt_file(),
             "-J",
             link,
             stdout=asyncio.subprocess.PIPE,
@@ -44,7 +44,7 @@ async def check_file_size(link):
         )
         stdout, stderr = await proc.communicate()
         if proc.returncode != 0:
-            print(f"Error:\n{stderr.decode()}")
+            print(f'Error:\n{stderr.decode()}')
             return None
         return json.loads(stdout.decode())
 
@@ -66,7 +66,6 @@ async def check_file_size(link):
     
     total_size = parse_size(formats)
     return total_size
-
 
 async def shell_cmd(cmd):
     proc = await asyncio.create_subprocess_shell(
