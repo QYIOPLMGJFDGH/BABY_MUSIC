@@ -13,38 +13,29 @@ from SONALI.utils.database import is_on_off
 from SONALI.utils.formatters import time_to_seconds
 
 
+# Define path to cookies.txt
+COOKIES_PATH = os.path.join(os.getcwd(), "cookies", "cookies.txt")
 
-import os
-import glob
-import random
-import logging
+# Function to get the cookies file path
+def get_cookies_file():
+    if not os.path.exists(COOKIES_PATH):
+        raise FileNotFoundError("cookies.txt file not found in the 'cookies' directory.")
+    return COOKIES_PATH
 
-def cookie_txt_file():
-    folder_path = f"{os.getcwd()}/cookies"
-    filename = f"{os.getcwd()}/cookies/logs.csv"
-    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
-    if not txt_files:
-        raise FileNotFoundError("No .txt files found in the specified folder.")
-    cookie_txt_file = random.choice(txt_files)
-    with open(filename, 'a') as file:
-        file.write(f'Choosen File : {cookie_txt_file}\n')
-    return f"""cookies/{str(cookie_txt_file).split("/")[-1]}"""
-
-
-
+# Function to check file size
 async def check_file_size(link):
     async def get_format_info(link):
         proc = await asyncio.create_subprocess_exec(
             "yt-dlp",
-            "--cookies", cookie_txt_file(),
+            "--cookies", get_cookies_file(),  # Use cookies.txt
             "-J",
             link,
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            stderr=asyncio.subprocess.PIPE,
         )
         stdout, stderr = await proc.communicate()
         if proc.returncode != 0:
-            print(f'Error:\n{stderr.decode()}')
+            print(f"Error:\n{stderr.decode()}")
             return None
         return json.loads(stdout.decode())
 
@@ -58,15 +49,16 @@ async def check_file_size(link):
     info = await get_format_info(link)
     if info is None:
         return None
-    
+
     formats = info.get('formats', [])
     if not formats:
         print("No formats found.")
         return None
-    
+
     total_size = parse_size(formats)
     return total_size
 
+# Shell command function
 async def shell_cmd(cmd):
     proc = await asyncio.create_subprocess_shell(
         cmd,
@@ -81,6 +73,18 @@ async def shell_cmd(cmd):
             return errorz.decode("utf-8")
     return out.decode("utf-8")
 
+# Main function for testing
+async def main():
+    try:
+        link = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # Example link
+        print(f"Checking file size for link: {link}")
+        size = await check_file_size(link)
+        if size is not None:
+            print(f"Total file size: {size / (1024 * 1024):.2f} MB")
+        else:
+            print("Failed to get file size.")
+    except FileNotFoundError as e:
+        print(e)
 
 class YouTubeAPI:
     def __init__(self):
