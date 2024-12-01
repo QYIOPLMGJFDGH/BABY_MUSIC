@@ -20,15 +20,13 @@ import random
 import logging
 
 def cookie_txt_file():
-    folder_path = f"{os.getcwd()}/cookies"
-    filename = f"{os.getcwd()}/cookies/logs.csv"
-    txt_files = glob.glob(os.path.join(folder_path, '*.txt'))
+    folder_path = os.path.join(os.getcwd(), "cookies")
+    txt_files = glob.glob(os.path.join(folder_path, "*.txt"))
     if not txt_files:
-        raise FileNotFoundError("No .txt files found in the specified folder.")
-    cookie_txt_file = random.choice(txt_files)
-    with open(filename, 'a') as file:
-        file.write(f'Choosen File : {cookie_txt_file}\n')
-    return f"""cookies/{str(cookie_txt_file).split("/")[-1]}"""
+        raise FileNotFoundError("No .txt files found in the 'cookies' folder.")
+    chosen_file = txt_files[0]  # Always pick the first file for consistency
+    print(f"Using cookie file: {chosen_file}")
+    return chosen_file
 
 
 
