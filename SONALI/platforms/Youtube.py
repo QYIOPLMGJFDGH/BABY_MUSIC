@@ -30,11 +30,13 @@ def cookie_txt_file():
 
 
 
+COOKIES_PATH = f"{os.getcwd()}/cookies/cookies.txt"
+
 async def check_file_size(link):
     async def get_format_info(link):
         proc = await asyncio.create_subprocess_exec(
             "yt-dlp",
-            "--cookies", cookie_txt_file(),
+            "--cookies", COOKIES_PATH,
             "-J",
             link,
             stdout=asyncio.subprocess.PIPE,
@@ -42,7 +44,7 @@ async def check_file_size(link):
         )
         stdout, stderr = await proc.communicate()
         if proc.returncode != 0:
-            print(f'Error:\n{stderr.decode()}')
+            print(f"Error:\n{stderr.decode()}")
             return None
         return json.loads(stdout.decode())
 
@@ -64,6 +66,7 @@ async def check_file_size(link):
     
     total_size = parse_size(formats)
     return total_size
+
 
 async def shell_cmd(cmd):
     proc = await asyncio.create_subprocess_shell(
