@@ -152,7 +152,7 @@ async def get_thumb(videoid):
     title1 = truncate(title)
     draw.text((text_x_position, 180), title1[0], fill=(255, 0, 0), font=title_font)
     draw.text((text_x_position, 230), title1[1], fill=(255, 0, 0), font=title_font)
-    draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (0, 0, 0), font=arial)
+    draw.text((text_x_position, 320), f"{channel}  |  {views[:23]}", (255, 0, 0), font=arial)
 
     line_length = 580  
     red_length = int(line_length * 0.6)
@@ -160,7 +160,7 @@ async def get_thumb(videoid):
 
     start_point_red = (text_x_position, 380)
     end_point_red = (text_x_position + red_length, 380)
-    draw.line([start_point_red, end_point_red], fill="#4CBB17", width=9)
+    draw.line([start_point_red, end_point_red], fill="#FFFFFF", width=9)
 
     start_point_white = (text_x_position + red_length, 380)
     end_point_white = (text_x_position + line_length, 380)
