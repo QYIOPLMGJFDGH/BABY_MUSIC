@@ -11,12 +11,22 @@ from youtubesearchpython.__future__ import VideosSearch
 from SONALI.utils.database import is_on_off
 from SONALI.utils.formatters import time_to_seconds
 
-# Fetch the authentication token from environment variable
-auth_token = os.getenv("YOUTUBE_AUTH_TOKEN", "AIzaSyCHtdbQGgmq0NiYlHVS0Gr4NqNHlyjouKw")
+async def shell_cmd(cmd):
+    proc = await asyncio.create_subprocess_shell(
+        cmd,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+    out, errorz = await proc.communicate()
+    if errorz:
+        if "unavailable videos are hidden" in (errorz.decode("utf-8")).lower():
+            return out.decode("utf-8")
+        else:
+            return errorz.decode("utf-8")
+    return out.decode("utf-8")
 
-# Ensure the token is available
-if not auth_token:
-    raise ValueError("YouTube authentication token is not provided")
+
+cookies_file = "SONALI/assets/cookies.txt"
 
 class YouTubeAPI:
     def __init__(self):
@@ -112,13 +122,13 @@ class YouTubeAPI:
             link = link.split("&")[0]
         proc = await asyncio.create_subprocess_exec(
             "yt-dlp",
+            "--cookies", cookies_file,
             "-g",
             "-f",
             "best[height<=?720][width<=?1280]",
             f"{link}",
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
-            env={**os.environ, "YOUTUBE_AUTH_TOKEN": auth_token},  # Add token to environment
         )
         stdout, stderr = await proc.communicate()
         if stdout:
@@ -132,7 +142,7 @@ class YouTubeAPI:
         if "&" in link:
             link = link.split("&")[0]
         playlist = await shell_cmd(
-            f"yt-dlp --get-id --flat-playlist --playlist-end {limit} --skip-download {link}"
+            f"yt-dlp --cookies {cookies_file} -i --get-id --flat-playlist --playlist-end {limit} --skip-download {link}"
         )
         try:
             result = playlist.split("\n")
@@ -169,7 +179,7 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        ytdl_opts = {"quiet": True}
+        ytdl_opts = {"quiet": True, "cookiefile": cookies_file}
         ydl = yt_dlp.YoutubeDL(ytdl_opts)
         with ydl:
             formats_available = []
@@ -241,9 +251,7 @@ class YouTubeAPI:
                 "nocheckcertificate": True,
                 "quiet": True,
                 "no_warnings": True,
-                "headers": {
-                    "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
-                },
+                "cookiefile": cookies_file,
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             info = x.extract_info(link, False)
@@ -261,9 +269,7 @@ class YouTubeAPI:
                 "nocheckcertificate": True,
                 "quiet": True,
                 "no_warnings": True,
-                "headers": {
-                    "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
-                },
+                "cookiefile": cookies_file,
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             info = x.extract_info(link, False)
@@ -285,9 +291,7 @@ class YouTubeAPI:
                 "no_warnings": True,
                 "prefer_ffmpeg": True,
                 "merge_output_format": "mp4",
-                "headers": {
-                    "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
-                },
+                "cookiefile": cookies_file,  # Add cookie file option here
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             x.download([link])
@@ -309,9 +313,7 @@ class YouTubeAPI:
                         "preferredquality": "192",
                     }
                 ],
-                "headers": {
-                    "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
-                },
+                "cookiefile": cookies_file,  # Add cookie file option here
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             x.download([link])
@@ -331,13 +333,13 @@ class YouTubeAPI:
             else:
                 proc = await asyncio.create_subprocess_exec(
                     "yt-dlp",
+                    "--cookies", cookies_file,
                     "-g",
                     "-f",
                     "best[height<=?720][width<=?1280]",
                     f"{link}",
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
-                    env={**os.environ, "YOUTUBE_AUTH_TOKEN": auth_token},  # Add token to environment
                 )
                 stdout, stderr = await proc.communicate()
                 if stdout:
