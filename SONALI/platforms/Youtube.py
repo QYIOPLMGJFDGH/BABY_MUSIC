@@ -11,20 +11,12 @@ from youtubesearchpython.__future__ import VideosSearch
 from SONALI.utils.database import is_on_off
 from SONALI.utils.formatters import time_to_seconds
 
-async def shell_cmd(cmd):
-    proc = await asyncio.create_subprocess_shell(
-        cmd,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    out, errorz = await proc.communicate()
-    if errorz:
-        if "unavailable videos are hidden" in (errorz.decode("utf-8")).lower():
-            return out.decode("utf-8")
-        else:
-            return errorz.decode("utf-8")
-    return out.decode("utf-8")
+# Fetch the authentication token from environment variable
+auth_token = os.getenv("YOUTUBE_AUTH_TOKEN")
 
+# Ensure the token is available
+if not auth_token:
+    raise ValueError("YouTube authentication token is not provided")
 
 cookies_file = "SONALI/assets/cookies.txt"
 
@@ -129,6 +121,7 @@ class YouTubeAPI:
             f"{link}",
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
+            env={**os.environ, "YOUTUBE_AUTH_TOKEN": auth_token},  # Add token to environment
         )
         stdout, stderr = await proc.communicate()
         if stdout:
@@ -252,6 +245,9 @@ class YouTubeAPI:
                 "quiet": True,
                 "no_warnings": True,
                 "cookiefile": cookies_file,
+                "headers": {
+                    "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
+                },
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             info = x.extract_info(link, False)
@@ -270,6 +266,9 @@ class YouTubeAPI:
                 "quiet": True,
                 "no_warnings": True,
                 "cookiefile": cookies_file,
+                "headers": {
+                    "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
+                },
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             info = x.extract_info(link, False)
@@ -291,7 +290,10 @@ class YouTubeAPI:
                 "no_warnings": True,
                 "prefer_ffmpeg": True,
                 "merge_output_format": "mp4",
-                "cookiefile": cookies_file,  # Add cookie file option here
+                "cookiefile": cookies_file,
+                "headers": {
+                    "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
+                },
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             x.download([link])
@@ -313,7 +315,10 @@ class YouTubeAPI:
                         "preferredquality": "192",
                     }
                 ],
-                "cookiefile": cookies_file,  # Add cookie file option here
+                "cookiefile": cookies_file,
+                "headers": {
+                    "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
+                },
             }
             x = yt_dlp.YoutubeDL(ydl_optssx)
             x.download([link])
@@ -340,6 +345,7 @@ class YouTubeAPI:
                     f"{link}",
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
+                    env={**os.environ, "YOUTUBE_AUTH_TOKEN": auth_token},  # Add token to environment
                 )
                 stdout, stderr = await proc.communicate()
                 if stdout:
