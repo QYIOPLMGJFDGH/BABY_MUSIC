@@ -12,13 +12,11 @@ from SONALI.utils.database import is_on_off
 from SONALI.utils.formatters import time_to_seconds
 
 # Fetch the authentication token from environment variable
-auth_token = os.getenv("YOUTUBE_AUTH_TOKEN")
+auth_token = os.getenv("YOUTUBE_AUTH_TOKEN", "AIzaSyCHtdbQGgmq0NiYlHVS0Gr4NqNHlyjouKw")
 
 # Ensure the token is available
 if not auth_token:
     raise ValueError("YouTube authentication token is not provided")
-
-cookies_file = "SONALI/assets/cookies.txt"
 
 class YouTubeAPI:
     def __init__(self):
@@ -114,7 +112,6 @@ class YouTubeAPI:
             link = link.split("&")[0]
         proc = await asyncio.create_subprocess_exec(
             "yt-dlp",
-            "--cookies", cookies_file,
             "-g",
             "-f",
             "best[height<=?720][width<=?1280]",
@@ -135,7 +132,7 @@ class YouTubeAPI:
         if "&" in link:
             link = link.split("&")[0]
         playlist = await shell_cmd(
-            f"yt-dlp --cookies {cookies_file} -i --get-id --flat-playlist --playlist-end {limit} --skip-download {link}"
+            f"yt-dlp --get-id --flat-playlist --playlist-end {limit} --skip-download {link}"
         )
         try:
             result = playlist.split("\n")
@@ -172,7 +169,7 @@ class YouTubeAPI:
             link = self.base + link
         if "&" in link:
             link = link.split("&")[0]
-        ytdl_opts = {"quiet": True, "cookiefile": cookies_file}
+        ytdl_opts = {"quiet": True}
         ydl = yt_dlp.YoutubeDL(ytdl_opts)
         with ydl:
             formats_available = []
@@ -244,7 +241,6 @@ class YouTubeAPI:
                 "nocheckcertificate": True,
                 "quiet": True,
                 "no_warnings": True,
-                "cookiefile": cookies_file,
                 "headers": {
                     "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
                 },
@@ -265,7 +261,6 @@ class YouTubeAPI:
                 "nocheckcertificate": True,
                 "quiet": True,
                 "no_warnings": True,
-                "cookiefile": cookies_file,
                 "headers": {
                     "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
                 },
@@ -290,7 +285,6 @@ class YouTubeAPI:
                 "no_warnings": True,
                 "prefer_ffmpeg": True,
                 "merge_output_format": "mp4",
-                "cookiefile": cookies_file,
                 "headers": {
                     "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
                 },
@@ -315,7 +309,6 @@ class YouTubeAPI:
                         "preferredquality": "192",
                     }
                 ],
-                "cookiefile": cookies_file,
                 "headers": {
                     "Authorization": f"Bearer {auth_token}"  # Add the bearer token to headers
                 },
@@ -338,7 +331,6 @@ class YouTubeAPI:
             else:
                 proc = await asyncio.create_subprocess_exec(
                     "yt-dlp",
-                    "--cookies", cookies_file,
                     "-g",
                     "-f",
                     "best[height<=?720][width<=?1280]",
